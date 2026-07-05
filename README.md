@@ -7,7 +7,7 @@ A React + TypeScript prototype for a multi-step security system bundle builder. 
 - **React 19** with TypeScript (strict mode)
 - **Vite** for dev server and production builds
 - **Tailwind CSS v4** with Figma-derived design tokens
-- **Vitest** for unit tests
+- **Vitest** + **React Testing Library** for unit and component tests
 - **ESLint** + **Prettier** for code quality
 - **Oxlint** available as an optional fast linter (`npm run lint:ox`)
 
@@ -50,6 +50,8 @@ This project uses a **data-driven architecture**:
 - **Domain types** — `src/types/bundle.ts` models products, configuration state, selected items, and pricing.
 - **Pure utilities** — `src/lib/bundle/` contains stateless functions for quantity changes, selection, grouping, and pricing.
 - **Hook** — `src/hooks/useBundleBuilder.ts` wires configuration state to derived selectors for UI layers.
+- **UI primitives** — `src/components/common/` provides reusable building blocks (`QuantityStepper`, `PriceDisplay`, `VariantSelector`, etc.).
+- **ProductCard** — `src/components/bundle-builder/ProductCard.tsx` is fully data-driven from the `Product` type.
 
 ### Prices in cents
 
@@ -80,13 +82,23 @@ Seeded selection produces:
 | Compare-at total | $238.81 |
 | Savings          | $50.92  |
 
-### Product data
+### Assets
 
-| Location                  | Purpose                                                                  |
-| ------------------------- | ------------------------------------------------------------------------ |
-| `src/data/products.ts`    | Full product catalog with prices, variants, initial quantities           |
-| `src/data/bundleSteps.ts` | Four builder accordion steps                                             |
-| `src/assets/products/`    | Product image assets (placeholder paths defined; files pending download) |
+| Location                 | Purpose                                                                 |
+| ------------------------ | ----------------------------------------------------------------------- |
+| `src/assets/products/`   | Product and variant images (`.png`) — 5 real, 13 placeholders           |
+| `src/assets/icons/`      | Step icons, chevrons, plus/minus, shipping truck (SVG); guarantee (PNG) |
+| `src/assets/references/` | Figma design reference screenshots — layout source-of-truth for Step 4+ |
+
+**Note:** Five camera product images and the satisfaction badge were promoted from `src/assets/references/`. Remaining catalog images are placeholders from `scripts/generate-placeholders.mjs`. Catalog paths in `src/data/products.ts` are stable for drop-in replacement.
+
+### ProductCard
+
+`ProductCard` receives all state from its parent — it does not read global bundle state directly. Props: `product`, `activeVariantId`, `quantity`, `onVariantChange`, `onIncrement`, `onDecrement`, optional `compact` for accordion grid layout. Selected state is driven by the active line quantity (> 0). Layout is **horizontal** on desktop (image left, content right) per `src/assets/references/Frame 543.png`.
+
+### Accordion builder
+
+`AccordionBuilder` in `BuilderArea` renders the 4-step accordion from `BUNDLE_STEPS`. Accordion open-step state (`openStepId`) is **local UI state** — separate from bundle product selection in `useBundleBuilder`. Step headers show distinct selected-line counts via `selectedCountByStep` (purple). Product cards render from `PRODUCT_CATALOG` in a responsive grid (`1` column mobile, `2` columns desktop).
 
 ## Project structure
 
@@ -95,23 +107,27 @@ src/
   app/                 # App entry composition
   assets/              # Static assets (icons, product images, references)
   components/
-    common/            # Shared UI primitives
+    common/            # Shared UI primitives (QuantityStepper, PriceDisplay, …)
     layout/            # App shell and layout
-    bundle-builder/    # Builder flow (placeholder)
+    bundle-builder/    # AccordionBuilder, ProductCard, BuilderArea
     review-panel/      # Review sidebar (placeholder)
   data/                # Static catalog and bundle steps
   hooks/               # useBundleBuilder state hook
   lib/bundle/          # Pure bundle business logic + tests
+  lib/productDisplay.ts # Display pricing helpers for ProductCard
   styles/              # Global styles and design tokens
+  test/                # Vitest + Testing Library setup
   types/               # Shared TypeScript types
   utils/               # Re-exports and formatting helpers
 ```
 
 ## Current status
 
-**Step 2.1 completed: data accuracy, selected-count logic, shipping model, and Figma-aligned pricing.**
+**Step 4 completed: accordion builder UI with data-driven ProductCards.**
 
-UI components (product cards, accordion, review panel) are not implemented yet.
+- Accordion open-step state is separate from bundle selection state.
+- Step header counters use `selectedCountByStep` (distinct selected lines, not total quantity).
+- `ReviewPanelArea` is still a placeholder — full review panel UI is next.
 
 ## Design reference
 

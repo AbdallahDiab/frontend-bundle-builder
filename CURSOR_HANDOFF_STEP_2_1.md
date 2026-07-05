@@ -23,25 +23,25 @@ Step 2.1 corrects seeded data, selected-count semantics, shipping modeling, prod
 
 Aligned to Figma screenshot values:
 
-| Field            | Cents  | Display  |
-| ---------------- | ------ | -------- |
-| totalCents       | 18789  | $187.89  |
+| Field               | Cents | Display |
+| ------------------- | ----- | ------- |
+| totalCents          | 18789 | $187.89 |
 | compareAtTotalCents | 23881 | $238.81 |
-| savingsCents     | 5092   | $50.92   |
+| savingsCents        | 5092  | $50.92  |
 
 ### 4. Product variants & pricing
 
-| Product | Change |
-| ------- | ------ |
-| Wyze Cam v4 | White/Grey/Black variants (unchanged); White qty 1 |
-| Wyze Cam Pan v3 | Added White/Black variants; White qty 2, Black qty 0; unit $23.99 / compare $28.99 |
-| Wyze Cam Floodlight v2 | Added White/Black variants; qty 0 |
-| Wyze Battery Cam Pro | Added White/Black variants; qty 0 |
-| Wyze Duo Cam Doorbell | No variants; qty 0 |
-| Wyze Sense Motion Sensor | Unit $29.99; qty 2 → line $59.98 |
-| Wyze Sense Hub Required | Renamed; FREE (price 0), compare $29.92 |
-| Wyze MicroSD Card (256GB) | Unit $20.98; qty 2 → line $41.96 |
-| Cam Unlimited | Compare $12.99; suffix `/mo` |
+| Product                   | Change                                                                             |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| Wyze Cam v4               | White/Grey/Black variants (unchanged); White qty 1                                 |
+| Wyze Cam Pan v3           | Added White/Black variants; White qty 2, Black qty 0; unit $23.99 / compare $28.99 |
+| Wyze Cam Floodlight v2    | Added White/Black variants; qty 0                                                  |
+| Wyze Battery Cam Pro      | Added White/Black variants; qty 0                                                  |
+| Wyze Duo Cam Doorbell     | No variants; qty 0                                                                 |
+| Wyze Sense Motion Sensor  | Unit $29.99; qty 2 → line $59.98                                                   |
+| Wyze Sense Hub Required   | Renamed; FREE (price 0), compare $29.92                                            |
+| Wyze MicroSD Card (256GB) | Unit $20.98; qty 2 → line $41.96                                                   |
+| Cam Unlimited             | Compare $12.99; suffix `/mo`                                                       |
 
 ### 5. Display fields
 
@@ -53,27 +53,27 @@ Added to `Product` and `SelectedItem`:
 
 ## Files updated
 
-| File | Changes |
-| ---- | ------- |
-| `src/types/bundle.ts` | `ShippingSummaryRow`, `SelectedQuantityByStep`, display fields |
-| `src/types/index.ts` | Export new types |
-| `src/data/products.ts` | Variants, pricing, hub rename, shipping removed from catalog |
-| `src/data/index.ts` | Export `BUNDLE_SHIPPING_SUMMARY` |
-| `src/lib/bundle/selectors.ts` | Line-based counts, quantity helper, shipping, pricing |
-| `src/lib/bundle/index.ts` | Export new selectors |
-| `src/lib/bundle/bundle.test.ts` | 17 tests covering corrections |
-| `src/hooks/useBundleBuilder.ts` | Expose `shippingSummary` |
-| `src/utils/index.ts` | Re-export new utilities |
-| `README.md` | Selected-count, shipping, and pricing notes |
+| File                            | Changes                                                        |
+| ------------------------------- | -------------------------------------------------------------- |
+| `src/types/bundle.ts`           | `ShippingSummaryRow`, `SelectedQuantityByStep`, display fields |
+| `src/types/index.ts`            | Export new types                                               |
+| `src/data/products.ts`          | Variants, pricing, hub rename, shipping removed from catalog   |
+| `src/data/index.ts`             | Export `BUNDLE_SHIPPING_SUMMARY`                               |
+| `src/lib/bundle/selectors.ts`   | Line-based counts, quantity helper, shipping, pricing          |
+| `src/lib/bundle/index.ts`       | Export new selectors                                           |
+| `src/lib/bundle/bundle.test.ts` | 17 tests covering corrections                                  |
+| `src/hooks/useBundleBuilder.ts` | Expose `shippingSummary`                                       |
+| `src/utils/index.ts`            | Re-export new utilities                                        |
+| `README.md`                     | Selected-count, shipping, and pricing notes                    |
 
 ## Final seeded selected counts
 
-| Step | Distinct lines | Selected items |
-| ---- | -------------- | -------------- |
-| Cameras | 2 | Wyze Cam v4 (White), Wyze Cam Pan v3 (White ×2) |
-| Plan | 1 | Cam Unlimited |
-| Sensors | 2 | Wyze Sense Motion Sensor, Wyze Sense Hub Required |
-| Accessories | 1 | Wyze MicroSD Card (256GB) |
+| Step        | Distinct lines | Selected items                                    |
+| ----------- | -------------- | ------------------------------------------------- |
+| Cameras     | 2              | Wyze Cam v4 (White), Wyze Cam Pan v3 (White ×2)   |
+| Plan        | 1              | Cam Unlimited                                     |
+| Sensors     | 2              | Wyze Sense Motion Sensor, Wyze Sense Hub Required |
+| Accessories | 1              | Wyze MicroSD Card (256GB)                         |
 
 ## Final pricing summary
 
@@ -85,20 +85,20 @@ Product savings:       $50.92  (5092 cents)
 
 Line breakdown:
 
-| Item | Qty | Active | Compare-at | Savings |
-| ---- | --- | ------ | ---------- | ------- |
-| Wyze Cam v4 (White) | 1 | $27.98 | $35.98 | $8.00 |
-| Wyze Cam Pan v3 (White) | 2 | $47.98 | $57.98 | $10.00 |
-| Wyze Sense Motion Sensor | 2 | $59.98 | — | — |
-| Wyze Sense Hub Required | 1 | FREE | $29.92 | $29.92 |
-| Wyze MicroSD Card (256GB) | 2 | $41.96 | — | — |
-| Cam Unlimited | 1 | $9.99/mo | $12.99/mo | $3.00 |
+| Item                      | Qty | Active   | Compare-at | Savings |
+| ------------------------- | --- | -------- | ---------- | ------- |
+| Wyze Cam v4 (White)       | 1   | $27.98   | $35.98     | $8.00   |
+| Wyze Cam Pan v3 (White)   | 2   | $47.98   | $57.98     | $10.00  |
+| Wyze Sense Motion Sensor  | 2   | $59.98   | —          | —       |
+| Wyze Sense Hub Required   | 1   | FREE     | $29.92     | $29.92  |
+| Wyze MicroSD Card (256GB) | 2   | $41.96   | —          | —       |
+| Cam Unlimited             | 1   | $9.99/mo | $12.99/mo  | $3.00   |
 
 Shipping (separate):
 
-| Label | Active | Compare-at |
-| ----- | ------ | ---------- |
-| Fast Shipping | FREE | $5.99 |
+| Label         | Active | Compare-at |
+| ------------- | ------ | ---------- |
+| Fast Shipping | FREE   | $5.99      |
 
 ## Shipping modeling
 
@@ -165,18 +165,18 @@ npm run format:check # PASS
 
 ## Verification
 
-| Check | Status |
-| ----- | ------ |
-| `npm run typecheck` | **PASS** |
-| `npm run lint` | **PASS** |
-| `npm run test` | **PASS** (17 tests) |
-| `npm run build` | **PASS** |
-| `npm run format:check` | **PASS** |
-| UI implemented | **No** (intentional) |
-| Selected counts match Figma | **Yes** |
-| Pricing matches $187.89 / $238.81 / $50.92 | **Yes** |
-| Fast Shipping not a product | **Yes** |
-| Pan v3 variants | **Yes** |
+| Check                                      | Status               |
+| ------------------------------------------ | -------------------- |
+| `npm run typecheck`                        | **PASS**             |
+| `npm run lint`                             | **PASS**             |
+| `npm run test`                             | **PASS** (17 tests)  |
+| `npm run build`                            | **PASS**             |
+| `npm run format:check`                     | **PASS**             |
+| UI implemented                             | **No** (intentional) |
+| Selected counts match Figma                | **Yes**              |
+| Pricing matches $187.89 / $238.81 / $50.92 | **Yes**              |
+| Fast Shipping not a product                | **Yes**              |
+| Pan v3 variants                            | **Yes**              |
 
 ## Suggested next step (Step 3 — UI)
 
