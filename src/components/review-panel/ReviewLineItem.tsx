@@ -36,7 +36,7 @@ export function ReviewLineItem({
         />
       </div>
 
-      <p className="m-0 min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
+      <p className="m-0 min-w-0 flex-1 text-sm font-medium leading-snug text-text-primary line-clamp-2">
         {displayName}
       </p>
 

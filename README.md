@@ -1,15 +1,29 @@
 # Security Bundle Builder
 
-A React + TypeScript prototype for a multi-step security system bundle builder. This repository is being built incrementally against a Figma design.
+A responsive React + TypeScript take-home prototype for building a personalized Wyze security system. Users configure cameras, plan, sensors, and accessories in a multi-step accordion, then review pricing and selections in a live summary panel.
+
+**Live demo:** _Coming soon — add deployment URL here._
 
 ## Tech stack
 
-- **React 19** with TypeScript (strict mode)
-- **Vite** for dev server and production builds
-- **Tailwind CSS v4** with Figma-derived design tokens
-- **Vitest** + **React Testing Library** for unit and component tests
-- **ESLint** + **Prettier** for code quality
-- **Oxlint** available as an optional fast linter (`npm run lint:ox`)
+- React 19 + TypeScript (strict mode)
+- Vite
+- Tailwind CSS v4 with Figma-derived design tokens
+- Vitest + React Testing Library
+- ESLint + Prettier
+
+## Features
+
+- Four-step accordion builder driven by catalog data
+- Data-driven `ProductCard` with variant selection and quantity steppers
+- Live review panel synced with the builder
+- Distinct selected-line counters per step (not total units)
+- Pricing summary with compare-at totals and savings
+- Fast Shipping shown separately from product savings
+- Save/restore bundle configuration via `localStorage`
+- Non-blocking toast feedback for checkout and save actions
+- Responsive layout from mobile through desktop
+- Accessible accordion, steppers, variant selector, and toast notifications
 
 ## Getting started
 
@@ -19,16 +33,24 @@ A React + TypeScript prototype for a multi-step security system bundle builder. 
 npm install
 ```
 
-### Dev
+### Run locally
 
 ```bash
 npm run dev
+```
+
+### Test
+
+```bash
+npm run test
+npm run test:watch
 ```
 
 ### Build
 
 ```bash
 npm run build
+npm run preview
 ```
 
 ### Quality checks
@@ -36,89 +58,59 @@ npm run build
 ```bash
 npm run typecheck
 npm run lint
-npm run test
-npm run test:watch
 npm run format
 npm run format:check
 ```
 
-## Architecture
+## Architecture overview
 
-This project uses a **data-driven architecture**:
+The app separates catalog data, pure domain logic, shared state, and UI layers.
 
-- **Catalog** — `src/data/products.ts` and `src/data/bundleSteps.ts` define products, variants, steps, and seeded quantities.
-- **Domain types** — `src/types/bundle.ts` models products, configuration state, selected items, and pricing.
-- **Pure utilities** — `src/lib/bundle/` contains stateless functions for quantity changes, selection, grouping, pricing, and localStorage persistence.
-- **Hook** — `src/hooks/useBundleBuilder.ts` wires configuration state to derived selectors for UI layers.
-- **Provider** — `BundleBuilderProvider` shares one `useBundleBuilder` instance between `AccordionBuilder` and `ReviewPanel`.
-- **UI primitives** — `src/components/common/` provides reusable building blocks (`QuantityStepper`, `PriceDisplay`, `VariantSelector`, etc.).
-- **ProductCard** — `src/components/bundle-builder/ProductCard.tsx` is fully data-driven from the `Product` type.
+```
+src/
+  app/                 # App entry composition
+  assets/              # Product images and UI icons
+  components/
+    common/            # Reusable primitives (QuantityStepper, PriceDisplay, Toast, …)
+    layout/            # App shell and responsive container
+    bundle-builder/    # AccordionBuilder, ProductCard, shared provider
+    review-panel/      # ReviewPanel and line items
+  data/                # Product catalog and bundle steps
+  hooks/               # useBundleBuilder state hook
+  lib/bundle/          # Pure bundle logic (quantities, pricing, persistence)
+  lib/productDisplay.ts
+  styles/              # Global styles and design tokens
+  test/                # Vitest setup and render helpers
+  types/               # Shared TypeScript types
+  utils/               # formatCurrency helper
+```
 
-### Prices in cents
+**Data flow:** `PRODUCT_CATALOG` and `BUNDLE_STEPS` define what can be selected. `useBundleBuilder` holds `BundleConfiguration` (quantities + active variants). Pure functions in `src/lib/bundle/` derive selected items, grouped review sections, pricing, and step counts. `BundleBuilderProvider` shares one hook instance between `AccordionBuilder` and `ReviewPanel`.
 
-All monetary values are stored as **integer cents** (e.g. `2798` = $27.98). Use `formatCurrency(cents)` from `src/utils/formatCurrency.ts` for display.
+## Data-driven catalog
 
-### Variant quantity behavior
+Products, variants, prices, badges, and seeded quantities live in `src/data/products.ts`. Bundle step metadata lives in `src/data/bundleSteps.ts`. UI components render from these types rather than hard-coded product branches.
 
-- Products **with variants** track quantity per variant independently.
-- The **active variant** controls which variant increment/decrement affects.
-- Switching active variant does **not** reset other variant quantities.
-- The review panel lists **each variant with quantity > 0** as a separate line item.
+All monetary values are stored as **integer cents** (e.g. `2798` = $27.98). Display formatting uses `formatCurrency()` from `src/utils/formatCurrency.ts`.
 
-### Selected counters vs quantity
+## Variant quantity behavior
 
-Accordion step counters (`getSelectedCountByStep`) count **distinct selected lines** — one per product or per variant with quantity > 0. Quantity does not increase the count (e.g. Wyze Cam Pan v3 qty 2 counts as 1 selected). Use `getSelectedQuantityByStep` when you need total units per step.
+- Products with variants track quantity **per variant**, independently.
+- The active variant controls which variant increment/decrement affects in the accordion.
+- Switching active variant does not reset other variant quantities.
+- The review panel lists each variant with quantity > 0 as its own line item.
 
-### Shipping summary
+## Selected counters vs quantity
 
-**Fast Shipping** is modeled as a fixed `ShippingSummaryRow` (`BUNDLE_SHIPPING_SUMMARY`), not as a catalog product. It appears in the review panel separately, does not affect selected counts, and is excluded from product savings. Display: compare-at $5.99 struck through, active price **FREE**.
+Accordion step counters count **distinct selected lines** — one per product or per variant with quantity > 0. Quantity does not increase the count (Wyze Cam Pan v3 at qty 2 still counts as 1 selected camera line).
 
-### Initial pricing (Figma-aligned)
+## Review panel sync
 
-Seeded selection produces:
+`AccordionBuilder` and `ReviewPanel` both consume `useBundleBuilderContext()`. Quantity changes in either surface call the same `increment` / `decrement` handlers, so totals, line items, and step counts stay in sync without duplicate state.
 
-| Field            | Value   |
-| ---------------- | ------- |
-| Total            | $187.89 |
-| Compare-at total | $238.81 |
-| Savings          | $50.92  |
+## Persistence
 
-### Assets
-
-| Location                 | Purpose                                                                 |
-| ------------------------ | ----------------------------------------------------------------------- |
-| `src/assets/products/`   | Product and variant images (`.png`) — 5 real, 13 placeholders           |
-| `src/assets/icons/`      | Step icons, chevrons, plus/minus, shipping truck (SVG); guarantee (PNG) |
-| `src/assets/references/` | Figma design reference screenshots — layout source-of-truth for Step 4+ |
-
-**Note:** Five camera product images and the satisfaction badge were promoted from `src/assets/references/`. Remaining catalog images are placeholders from `scripts/generate-placeholders.mjs`. Catalog paths in `src/data/products.ts` are stable for drop-in replacement.
-
-### ProductCard
-
-`ProductCard` receives all state from its parent — it does not read global bundle state directly. Props: `product`, `activeVariantId`, `quantity`, `onVariantChange`, `onIncrement`, `onDecrement`, optional `compact` for accordion grid layout. Selected state is driven by the active line quantity (> 0). Layout is **horizontal** on desktop (image left, content right) per `src/assets/references/Frame 543.png`.
-
-### Accordion builder
-
-`AccordionBuilder` in `BuilderArea` renders the 4-step accordion from `BUNDLE_STEPS`. Accordion open-step state (`openStepId`) is **local UI state** — separate from bundle product selection. Both accordion and review panel consume shared bundle state via `useBundleBuilderContext()`. Step headers show distinct selected-line counts via `selectedCountByStep` (purple). Product cards render from `PRODUCT_CATALOG` in a responsive grid (`1` column mobile, `2` columns desktop).
-
-### Review panel
-
-`ReviewPanel` in `ReviewPanelArea` displays the live "Your security system" summary. It reads `groupedSelectedItems`, `pricingSummary`, and `shippingSummary` from shared context. Items render under Cameras → Sensors → Accessories → Plan; **Fast Shipping** is a separate row below Plan. Quantity steppers call the same `increment` / `decrement` handlers as the accordion (with optional `variantId` for variant lines). Checkout and Save show non-blocking toast feedback. Save persists the current bundle configuration to localStorage. On large screens the panel is sticky with a fixed review-column width; on mobile it stacks below the builder.
-
-### Responsive layout
-
-| Breakpoint                | Layout                                                                   |
-| ------------------------- | ------------------------------------------------------------------------ |
-| **Mobile** (`< lg`)       | Single column — builder first, review panel below. No horizontal scroll. |
-| **Large desktop** (`lg+`) | Two columns — builder left, sticky review panel right (`20.5rem`).       |
-
-**Heading behavior:** "Let's get started!" renders as an `<h1>` on mobile/tablet only (`lg:hidden`), matching the iPhone reference. Desktop layouts omit this heading per Frame 1735 / Frame 8234.
-
-**Toast placement:** Toasts appear at the top on mobile (avoiding checkout/save links) and bottom-center on `sm+`.
-
-### Persistence
-
-Bundle configuration is saved client-side under the localStorage key **`bundle-builder-config-v1`**.
+Bundle configuration is saved client-side under **`bundle-builder-config-v1`**.
 
 | Stored                | Not stored                          |
 | --------------------- | ----------------------------------- |
@@ -126,62 +118,80 @@ Bundle configuration is saved client-side under the localStorage key **`bundle-b
 | `quantities.variants` | `pricingSummary`, totals, savings   |
 | `activeVariants`      | Shipping summary, derived selectors |
 
-**Save behavior:** Clicking "Save my system for later" writes the current `configuration` (`quantities` + `activeVariants`) to localStorage. No auto-save on every quantity change.
+**Save:** "Save my system for later" writes the current configuration to `localStorage`. There is no auto-save on every change.
 
-**Restore behavior:** On app load, `useBundleBuilder` reads localStorage via `loadBundleConfiguration()` in a lazy state initializer. If valid saved data exists, the UI restores with those quantities and active variants.
+**Restore:** On load, `useBundleBuilder` reads saved data via `loadBundleConfiguration()`. Valid payloads restore quantities and active variants.
 
-**Invalid data fallback:** Missing key, invalid JSON, unknown product ids, unknown variant ids, or malformed payloads fall back to `getInitialBundleConfiguration()` without crashing. Unknown catalog entries in saved data are ignored during sanitization.
+**Invalid data:** Missing key, invalid JSON, unknown product/variant ids, or malformed payloads fall back to seeded defaults without crashing.
 
-**Reset saved configuration (demo/testing):** In the browser console:
+### Reset saved demo state
+
+Because the app persists configuration, a previous visit may show different selections than the Figma defaults. To reset in the browser console:
 
 ```js
 localStorage.removeItem('bundle-builder-config-v1')
+location.reload()
 ```
 
-Then reload the page to restore Figma-seeded defaults.
+### Clean default state (Figma-aligned)
 
-## Project structure
+With empty `localStorage`, the seeded configuration produces:
 
-```
-src/
-  app/                 # App entry composition
-  assets/              # Static assets (icons, product images, references)
-  components/
-    common/            # Shared UI primitives (QuantityStepper, PriceDisplay, Toast, …)
-    layout/            # App shell and layout
-    bundle-builder/    # AccordionBuilder, ProductCard, BuilderArea, BundleBuilderProvider
-    review-panel/      # ReviewPanel, ReviewLineItem, ReviewPanelArea
-  data/                # Static catalog and bundle steps
-  hooks/               # useBundleBuilder state hook
-  lib/bundle/          # Pure bundle business logic + tests
-  lib/productDisplay.ts # Display pricing helpers for ProductCard
-  styles/              # Global styles and design tokens
-  test/                # Vitest + Testing Library setup
-  types/               # Shared TypeScript types
-  utils/               # Re-exports and formatting helpers
-```
+| Field            | Value   |
+| ---------------- | ------- |
+| Total            | $187.89 |
+| Compare-at total | $238.81 |
+| Savings          | $50.92  |
 
-## Current status
+| Step                 | Selected count |
+| -------------------- | -------------- |
+| Cameras              | 2              |
+| Plan                 | 1              |
+| Sensors              | 2              |
+| Add extra protection | 1              |
 
-**Step 7 completed: responsive and visual fidelity polish.**
+## Accessibility
 
-- Desktop layout aligned closer to Frame 1735 / Frame 8234 (column proportions, gaps, review panel width, surfaces).
-- Mobile layout stacks builder and review cleanly per Frame 1736 / iPhone reference.
-- "Let's get started!" heading visible on mobile only; hidden on desktop.
-- Product cards refined for compact accordion grid (borders, spacing, text overflow, odd-count centering).
-- Review panel polished (REVIEW label, line items, footer totals, checkout/save placement).
-- Toast repositioned on mobile to avoid covering checkout/save actions.
-- Persistence unchanged — save/restore still works via `bundle-builder-config-v1`.
+- Accordion headers use `button` elements with `aria-expanded` and `aria-controls`.
+- Quantity steppers are keyboard-operable buttons with descriptive labels.
+- Variant selector uses a `radiogroup` with labeled radio buttons.
+- Toasts use `aria-live="polite"` and dismissible `role="status"` messages.
+- Focus-visible outlines are applied to interactive controls.
+- Product cards use semantic `article` elements with `aria-label`.
+- Decorative images use empty `alt` text and `aria-hidden` where appropriate.
 
-### Known visual limitations
+## Responsive behavior
 
-- **13 product images still placeholders** — real camera images only; remaining catalog uses generated placeholders.
-- **Financing pill is static** — not computed from bundle total.
-- **Gilroy font** — falls back to system sans unless loaded separately.
-- **Odd product count centering** — last card in an odd grid is centered via CSS; exact Figma pixel parity not guaranteed at all breakpoints.
+| Breakpoint            | Layout                                                            |
+| --------------------- | ----------------------------------------------------------------- |
+| Mobile / tablet       | Single column — builder first, review panel below                 |
+| Large desktop (`lg+`) | Two columns — builder left, sticky review panel right (`20.5rem`) |
+
+"Let's get started!" renders as an `<h1>` on mobile/tablet only; desktop layouts omit it per the design references.
+
+Toasts appear at the top on mobile and bottom-center on larger screens so they do not cover checkout/save actions.
+
+## Tradeoffs and assumptions
+
+- **Product images:** All catalog image paths resolve to files in `src/assets/products/`. Several non-camera images are simple generated placeholders where production assets were unavailable. Paths in `src/data/products.ts` are stable for drop-in replacement.
+- **Financing pill** ("as low as $19.19/mo") is static, not computed from bundle total.
+- **Checkout** shows prototype feedback only; no payment flow.
+- **Gilroy font** falls back to system sans-serif unless loaded separately.
+- **Shipping** is a fixed summary row, not a selectable catalog product.
+- **Odd product grid centering** uses CSS so the last card in an odd-count step centers on desktop; exact pixel parity is not guaranteed at every breakpoint.
+
+## What I would improve with more time
+
+- Replace remaining placeholder product images with exported Figma assets.
+- Add integration tests for full-page responsive layouts at key breakpoints.
+- Compute financing messaging from bundle total.
+- Add URL-based deep linking for saved bundles.
+- Introduce error boundaries and telemetry around persistence failures.
+- Add animation for accordion expand/collapse and toast enter/exit.
+- Extract a small design-system package for shared tokens and primitives.
 
 ## Design reference
 
-Figma: [Untitled — node 1:858](https://www.figma.com/design/uV3xhhk46YJliaJEsDgIQI/Untitled?node-id=1-858)
+Figma: [Frontend Test Figma — node 68:9663](https://www.figma.com/design/JYf61etQVqeseX7oY5alGz/Frontend-Test-Figma?node-id=68-9663)
 
 Design tokens (Wyze purple, Gray-C palette, semantic colors) are defined in `src/styles/tokens.css`.
