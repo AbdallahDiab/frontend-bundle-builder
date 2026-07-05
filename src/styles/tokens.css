@@ -1,0 +1,43 @@
+/**
+ * Design tokens derived from the Figma file (Wyze bundle builder).
+ * Source variables: core/wyze purple, Gray-C/* palette.
+ */
+@theme {
+  /* Brand */
+  --color-wyze-purple: #4e2fd2;
+  --color-wyze-purple-border: rgb(78 47 210 / 0.7);
+
+  /* Neutrals (Gray-C) */
+  --color-gray-obsidian: #0b0d10;
+  --color-gray-700: #525963;
+  --color-gray-600: #575757;
+  --color-gray-400: #ced6de;
+  --color-gray-300: #e6ebf0;
+  --color-gray-200: #f0f4f7;
+  --color-gray-border: #cccccc;
+
+  /* Text */
+  --color-text-primary: #1f1f1f;
+  --color-text-secondary: rgb(31 31 31 / 0.75);
+
+  /* Semantic */
+  --color-link: #0000ee;
+  --color-sale: #d8392b;
+  --color-selection: #0aa288;
+  --color-selection-bg: rgb(29 240 187 / 0.04);
+
+  /* Surfaces */
+  --color-surface: #ffffff;
+  --color-surface-muted: var(--color-gray-200);
+
+  /* Typography */
+  --font-sans: 'Gilroy', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Layout */
+  --spacing-shell: 1.5rem;
+  --radius-card: 0.625rem;
+  --radius-control: 0.25rem;
+
+  /* Shadows */
+  --shadow-panel: 0 1px 3px rgb(11 13 16 / 0.08);
+}
