@@ -45,10 +45,13 @@ export function ReviewPanel() {
   return (
     <aside
       aria-label="Your security system review"
-      className="lg:sticky lg:top-6 lg:self-start"
+      className="lg:sticky lg:top-8 lg:max-h-[calc(100dvh-4rem)] lg:self-start lg:overflow-y-auto"
     >
-      <div className="overflow-hidden rounded-card bg-gray-200 shadow-panel">
-        <header className="border-b border-gray-300/70 px-5 py-5">
+      <div className="overflow-hidden rounded-card bg-review-panel shadow-panel">
+        <header className="border-b border-gray-300/70 px-4 py-4 sm:px-5 sm:py-5">
+          <p className="m-0 mb-1 text-[0.6875rem] font-medium tracking-[0.08em] text-gray-600 uppercase">
+            Review
+          </p>
           <h2 className="m-0 text-xl font-bold text-text-primary sm:text-2xl">
             Your security system
           </h2>
@@ -58,7 +61,7 @@ export function ReviewPanel() {
           </p>
         </header>
 
-        <div className="px-5 py-4">
+        <div className="px-4 py-3 sm:px-5 sm:py-4">
           {REVIEW_CATEGORY_ORDER.map((category) => {
             const items = groupedSelectedItems[category]
             if (items.length === 0) return null
@@ -67,11 +70,11 @@ export function ReviewPanel() {
               <section
                 key={category}
                 aria-labelledby={`review-section-${category}`}
-                className="border-b border-gray-300/70 pb-2 last:border-b-0"
+                className="border-b border-gray-300/70 pb-1 last:border-b-0"
               >
                 <h3
                   id={`review-section-${category}`}
-                  className="m-0 py-3 text-xs font-semibold tracking-[0.08em] text-gray-600 uppercase"
+                  className="m-0 py-2.5 text-[0.6875rem] font-semibold tracking-[0.08em] text-gray-600 uppercase sm:py-3"
                 >
                   {REVIEW_CATEGORY_LABELS[category]}
                 </h3>
@@ -96,16 +99,16 @@ export function ReviewPanel() {
 
           <section
             aria-label="Shipping"
-            className="border-b border-gray-300/70 py-3"
+            className="border-b border-gray-300/70 py-2.5 sm:py-3"
             data-testid="review-shipping-row"
           >
-            <div className="flex items-center gap-3">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-control bg-surface p-2">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-control bg-surface p-1.5 sm:size-12 sm:p-2">
                 <img
                   src={shippingTruckIcon}
                   alt=""
                   aria-hidden="true"
-                  className="size-7"
+                  className="size-6 sm:size-7"
                 />
               </div>
 
@@ -118,73 +121,75 @@ export function ReviewPanel() {
                 priceCents={shippingSummary.priceCents}
                 compareAtPriceCents={shippingSummary.compareAtPriceCents}
                 priceLabel={shippingSummary.priceLabel}
+                className="shrink-0"
               />
             </div>
           </section>
         </div>
 
-        <footer className="border-t border-gray-300/70 bg-gray-200 px-5 py-5">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-            <div className="flex shrink-0 justify-center sm:justify-start">
-              <ProductImage
-                src={satisfactionBadge}
-                alt="100% Wyze satisfaction guarantee"
-                className="size-24 sm:size-28"
-              />
-            </div>
+        <footer className="border-t border-gray-300/70 px-4 py-4 sm:px-5 sm:py-5">
+          <div className="flex items-start justify-between gap-3">
+            <ProductImage
+              src={satisfactionBadge}
+              alt="100% Wyze satisfaction guarantee"
+              className="size-[4.5rem] shrink-0 sm:size-24"
+            />
 
-            <div className="flex min-w-0 flex-1 flex-col gap-4">
-              <span className="inline-flex w-fit items-center rounded-full bg-wyze-purple px-3 py-1 text-xs font-semibold text-white">
+            <div className="flex min-w-0 flex-col items-end gap-2">
+              <span className="inline-flex items-center rounded-full bg-wyze-purple px-2.5 py-0.5 text-[0.6875rem] font-semibold text-white sm:px-3 sm:py-1 sm:text-xs">
                 as low as $19.19/mo
               </span>
 
-              <div className="flex flex-col items-end gap-1">
-                <span className="text-sm text-text-secondary line-through">
+              <div className="flex flex-col items-end gap-0.5">
+                <span
+                  className="text-sm text-text-secondary line-through"
+                  data-testid="review-compare-total"
+                >
                   {formatCurrency(pricingSummary.compareAtTotalCents)}
                 </span>
                 <span
-                  className="text-3xl font-bold text-wyze-purple"
+                  className="text-[1.75rem] font-bold leading-none text-wyze-purple sm:text-3xl"
                   data-testid="review-total"
                 >
                   {formatCurrency(pricingSummary.totalCents)}
                 </span>
               </div>
-
-              <p
-                className="m-0 text-center text-sm font-medium text-selection sm:text-left"
-                data-testid="review-savings"
-              >
-                Congrats! You&apos;re saving{' '}
-                {formatCurrency(pricingSummary.savingsCents)} on your security
-                bundle!
-              </p>
-
-              <button
-                type="button"
-                className="w-full rounded-control bg-wyze-purple px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-wyze-purple/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
-                onClick={handleCheckout}
-              >
-                Checkout
-              </button>
-
-              <div className="flex flex-col items-center gap-1 sm:items-start">
-                <button
-                  type="button"
-                  className="text-sm text-text-secondary underline underline-offset-2 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
-                  onClick={handleSaveForLater}
-                >
-                  Save my system for later
-                </button>
-                {saveAcknowledged ? (
-                  <p
-                    className="m-0 text-xs text-selection"
-                    data-testid="save-acknowledgement"
-                  >
-                    Saved for your next visit
-                  </p>
-                ) : null}
-              </div>
             </div>
+          </div>
+
+          <p
+            className="m-0 mt-4 text-center text-sm font-medium text-selection"
+            data-testid="review-savings"
+          >
+            Congrats! You&apos;re saving{' '}
+            {formatCurrency(pricingSummary.savingsCents)} on your security
+            bundle!
+          </p>
+
+          <button
+            type="button"
+            className="mt-4 w-full min-h-11 rounded-control bg-wyze-purple px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-wyze-purple/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+            onClick={handleCheckout}
+          >
+            Checkout
+          </button>
+
+          <div className="mt-3 flex flex-col items-center gap-1">
+            <button
+              type="button"
+              className="min-h-11 text-sm text-text-secondary underline underline-offset-2 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+              onClick={handleSaveForLater}
+            >
+              Save my system for later
+            </button>
+            {saveAcknowledged ? (
+              <p
+                className="m-0 text-xs text-selection"
+                data-testid="save-acknowledgement"
+              >
+                Saved for your next visit
+              </p>
+            ) : null}
           </div>
         </footer>
       </div>

@@ -29,15 +29,24 @@
   /* Surfaces */
   --color-surface: #ffffff;
   --color-surface-muted: var(--color-gray-200);
+  --color-page-bg: #e6ebf0;
+  --color-review-panel: #f0f4f7;
+  --color-accordion-open: #f0f4f7;
 
   /* Typography */
   --font-sans: 'Gilroy', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Layout */
-  --spacing-shell: 1.5rem;
+  --spacing-shell: 1rem;
+  --spacing-shell-lg: 1.5rem;
+  --spacing-builder-review: 2rem;
+  --spacing-builder-review-lg: 2.5rem;
+  --width-review-panel: 20.5rem;
+  --width-content-max: 75rem;
   --radius-card: 0.625rem;
   --radius-control: 0.25rem;
 
   /* Shadows */
   --shadow-panel: 0 1px 3px rgb(11 13 16 / 0.08);
+  --shadow-card: 0 1px 2px rgb(11 13 16 / 0.06);
 }

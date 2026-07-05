@@ -81,14 +81,14 @@ function AccordionStepPanel({
   return (
     <div
       className={`border-b border-gray-300 last:border-b-0 ${
-        isOpen ? 'bg-surface-muted' : 'bg-surface'
+        isOpen ? 'bg-accordion-open' : 'bg-surface'
       }`}
     >
       <h3 className="m-0">
         <button
           id={headerId}
           type="button"
-          className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-200/50 sm:px-5 sm:py-4"
+          className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-gray-200/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-wyze-purple sm:px-5 sm:py-4"
           aria-expanded={isOpen}
           aria-controls={panelId}
           aria-label={
@@ -140,10 +140,10 @@ function AccordionStepPanel({
           id={panelId}
           role="region"
           aria-labelledby={headerId}
-          className="border-t border-gray-300 px-4 pt-4 pb-5 sm:px-5 sm:pb-6"
+          className="border-t border-gray-300 bg-surface px-4 pt-4 pb-5 sm:px-5 sm:pb-6"
         >
           {products.length > 0 ? (
-            <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 md:grid-cols-2">
+            <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 md:grid-cols-2 md:gap-4 [&>li:last-child:nth-child(odd)]:md:col-span-2 [&>li:last-child:nth-child(odd)]:md:mx-auto [&>li:last-child:nth-child(odd)]:md:max-w-[calc(50%-0.5rem)] [&>li:last-child:nth-child(odd)]:md:w-full">
               {products.map((product) => {
                 const activeVariantId =
                   getActiveVariantId(configuration, product.id) ??
@@ -175,10 +175,10 @@ function AccordionStepPanel({
           )}
 
           {!isLastStep && nextStepTitle && (
-            <div className="mt-5 flex justify-center">
+            <div className="mt-6 flex justify-center sm:mt-8">
               <button
                 type="button"
-                className="inline-flex min-w-[12rem] items-center justify-center rounded-control border border-wyze-purple bg-surface px-6 py-2.5 text-sm font-semibold text-wyze-purple transition-colors hover:bg-gray-200/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+                className="inline-flex min-h-11 min-w-[14rem] items-center justify-center rounded-control border border-wyze-purple bg-surface px-8 py-2.5 text-sm font-semibold text-wyze-purple transition-colors hover:bg-gray-200/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
                 onClick={onNext}
               >
                 Next: {nextStepTitle}
@@ -214,10 +214,13 @@ export function AccordionBuilder() {
 
   return (
     <section aria-label="Bundle builder accordion">
-      <header className="mb-4">
-        <h2 className="text-2xl font-bold text-text-primary sm:text-[1.75rem]">
+      <header className="mb-5 lg:hidden">
+        <h1
+          className="text-center text-2xl font-bold text-text-primary sm:text-[1.75rem]"
+          data-testid="builder-mobile-heading"
+        >
           Let&apos;s get started!
-        </h2>
+        </h1>
       </header>
 
       <div className="overflow-hidden rounded-card border border-gray-300 bg-surface shadow-panel">

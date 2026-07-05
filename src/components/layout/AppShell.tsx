@@ -6,10 +6,10 @@ import { MainContainer } from './MainContainer'
 export function AppShell() {
   return (
     <ToastProvider>
-      <div className="min-h-dvh bg-gray-200">
+      <div className="min-h-dvh bg-page-bg">
         <MainContainer>
           <BundleBuilderProvider>
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_var(--width-review-panel)] lg:items-start lg:gap-10 xl:gap-12">
               <BuilderArea />
               <ReviewPanelArea />
             </div>

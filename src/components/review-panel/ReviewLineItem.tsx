@@ -24,33 +24,31 @@ export function ReviewLineItem({
 
   return (
     <li
-      className="flex items-center gap-3 border-b border-gray-300/70 py-3 last:border-b-0"
+      className="flex items-center gap-2 border-b border-gray-300/70 py-2.5 last:border-b-0 sm:gap-3 sm:py-3"
       data-testid={`review-line-${getLineItemKey(item)}`}
     >
-      <div className="flex size-12 shrink-0 items-center justify-center rounded-control bg-surface p-1">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-control bg-surface p-1 sm:size-12">
         <ProductImage
           src={item.imageSrc}
           alt=""
           aria-hidden="true"
-          className="size-10"
+          className="size-9 object-contain sm:size-10"
         />
       </div>
 
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <p className="m-0 min-w-0 flex-1 text-sm font-medium text-text-primary">
-          {displayName}
-        </p>
+      <p className="m-0 min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
+        {displayName}
+      </p>
 
-        <QuantityStepper
-          value={item.quantity}
-          onIncrement={onIncrement}
-          onDecrement={onDecrement}
-          decrementDisabled={item.quantity <= 0}
-          ariaLabel={`${item.productName} quantity`}
-          size="sm"
-          className="shrink-0"
-        />
-      </div>
+      <QuantityStepper
+        value={item.quantity}
+        onIncrement={onIncrement}
+        onDecrement={onDecrement}
+        decrementDisabled={item.quantity <= 0}
+        ariaLabel={`${item.productName} quantity`}
+        size="sm"
+        className="shrink-0"
+      />
 
       <PriceDisplay
         variant="review"
@@ -58,7 +56,7 @@ export function ReviewLineItem({
         compareAtPriceCents={item.compareAtLineTotalCents}
         priceLabel={item.priceLabel}
         priceSuffix={item.priceSuffix}
-        className="shrink-0"
+        className="w-[4.25rem] shrink-0 sm:w-auto"
       />
     </li>
   )

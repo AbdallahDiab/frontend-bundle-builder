@@ -23,6 +23,7 @@ describe('ReviewPanel', () => {
   it('renders the review panel title and subtitle', () => {
     renderWithBundleBuilder(<ReviewPanel />)
 
+    expect(screen.getByText('Review')).toBeInTheDocument()
     expect(
       screen.getByRole('heading', { name: 'Your security system' }),
     ).toBeInTheDocument()

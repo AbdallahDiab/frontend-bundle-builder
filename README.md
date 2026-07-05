@@ -103,7 +103,18 @@ Seeded selection produces:
 
 ### Review panel
 
-`ReviewPanel` in `ReviewPanelArea` displays the live "Your security system" summary. It reads `groupedSelectedItems`, `pricingSummary`, and `shippingSummary` from shared context. Items render under Cameras → Sensors → Accessories → Plan; **Fast Shipping** is a separate row below Plan. Quantity steppers call the same `increment` / `decrement` handlers as the accordion (with optional `variantId` for variant lines). Checkout and Save show non-blocking toast feedback. Save persists the current bundle configuration to localStorage.
+`ReviewPanel` in `ReviewPanelArea` displays the live "Your security system" summary. It reads `groupedSelectedItems`, `pricingSummary`, and `shippingSummary` from shared context. Items render under Cameras → Sensors → Accessories → Plan; **Fast Shipping** is a separate row below Plan. Quantity steppers call the same `increment` / `decrement` handlers as the accordion (with optional `variantId` for variant lines). Checkout and Save show non-blocking toast feedback. Save persists the current bundle configuration to localStorage. On large screens the panel is sticky with a fixed review-column width; on mobile it stacks below the builder.
+
+### Responsive layout
+
+| Breakpoint                | Layout                                                                   |
+| ------------------------- | ------------------------------------------------------------------------ |
+| **Mobile** (`< lg`)       | Single column — builder first, review panel below. No horizontal scroll. |
+| **Large desktop** (`lg+`) | Two columns — builder left, sticky review panel right (`20.5rem`).       |
+
+**Heading behavior:** "Let's get started!" renders as an `<h1>` on mobile/tablet only (`lg:hidden`), matching the iPhone reference. Desktop layouts omit this heading per Frame 1735 / Frame 8234.
+
+**Toast placement:** Toasts appear at the top on mobile (avoiding checkout/save links) and bottom-center on `sm+`.
 
 ### Persistence
 
@@ -120,6 +131,14 @@ Bundle configuration is saved client-side under the localStorage key **`bundle-b
 **Restore behavior:** On app load, `useBundleBuilder` reads localStorage via `loadBundleConfiguration()` in a lazy state initializer. If valid saved data exists, the UI restores with those quantities and active variants.
 
 **Invalid data fallback:** Missing key, invalid JSON, unknown product ids, unknown variant ids, or malformed payloads fall back to `getInitialBundleConfiguration()` without crashing. Unknown catalog entries in saved data are ignored during sanitization.
+
+**Reset saved configuration (demo/testing):** In the browser console:
+
+```js
+localStorage.removeItem('bundle-builder-config-v1')
+```
+
+Then reload the page to restore Figma-seeded defaults.
 
 ## Project structure
 
@@ -144,14 +163,22 @@ src/
 
 ## Current status
 
-**Step 6 completed: localStorage persistence and non-blocking feedback messages.**
+**Step 7 completed: responsive and visual fidelity polish.**
 
-- `bundle-builder-config-v1` stores `quantities` and `activeVariants` only.
-- Saved configuration restores on reload via `loadBundleConfiguration()`.
-- Invalid or stale saved data falls back to seeded defaults safely.
-- "Save my system for later" persists the current shopper configuration.
-- Checkout and Save use accessible toast feedback instead of `window.alert`.
-- Accordion and ReviewPanel remain synchronized after restore.
+- Desktop layout aligned closer to Frame 1735 / Frame 8234 (column proportions, gaps, review panel width, surfaces).
+- Mobile layout stacks builder and review cleanly per Frame 1736 / iPhone reference.
+- "Let's get started!" heading visible on mobile only; hidden on desktop.
+- Product cards refined for compact accordion grid (borders, spacing, text overflow, odd-count centering).
+- Review panel polished (REVIEW label, line items, footer totals, checkout/save placement).
+- Toast repositioned on mobile to avoid covering checkout/save actions.
+- Persistence unchanged — save/restore still works via `bundle-builder-config-v1`.
+
+### Known visual limitations
+
+- **13 product images still placeholders** — real camera images only; remaining catalog uses generated placeholders.
+- **Financing pill is static** — not computed from bundle total.
+- **Gilroy font** — falls back to system sans unless loaded separately.
+- **Odd product count centering** — last card in an odd grid is centered via CSS; exact Figma pixel parity not guaranteed at all breakpoints.
 
 ## Design reference
 

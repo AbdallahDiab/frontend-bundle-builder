@@ -16,8 +16,8 @@ type QuantityStepperProps = {
 }
 
 const sizeClasses: Record<QuantityStepperSize, string> = {
-  sm: 'h-8 text-sm',
-  md: 'h-9 text-sm',
+  sm: 'h-9 min-h-9 text-sm',
+  md: 'h-9 min-h-9 text-sm',
 }
 
 export function QuantityStepper({
@@ -37,7 +37,7 @@ export function QuantityStepper({
     >
       <AppButton
         variant="icon"
-        className="size-8 rounded-none border-0 border-r border-gray-border"
+        className="size-9 min-h-9 min-w-9 rounded-none border-0 border-r border-gray-border"
         onClick={onDecrement}
         disabled={decrementDisabled}
         aria-label="Decrease quantity"
@@ -46,7 +46,7 @@ export function QuantityStepper({
       </AppButton>
 
       <span
-        className="flex min-w-8 items-center justify-center px-2 font-medium tabular-nums"
+        className="flex min-w-9 items-center justify-center px-1.5 font-medium tabular-nums"
         aria-live="polite"
         aria-atomic="true"
       >
@@ -56,7 +56,7 @@ export function QuantityStepper({
 
       <AppButton
         variant="icon"
-        className="size-8 rounded-none border-0 border-l border-gray-border"
+        className="size-9 min-h-9 min-w-9 rounded-none border-0 border-l border-gray-border"
         onClick={onIncrement}
         aria-label="Increase quantity"
       >

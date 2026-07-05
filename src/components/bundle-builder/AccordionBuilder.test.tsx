@@ -162,4 +162,13 @@ describe('AccordionBuilder', () => {
     expect(screen.getByLabelText('Cam Unlimited')).toBeInTheDocument()
     expect(screen.queryByLabelText('Wyze Cam v4')).not.toBeInTheDocument()
   })
+
+  it('renders the mobile-only heading with lg:hidden visibility class', () => {
+    renderWithBundleBuilder(<AccordionBuilder />)
+
+    const heading = screen.getByTestId('builder-mobile-heading')
+    expect(heading).toHaveTextContent("Let's get started!")
+    expect(heading.tagName).toBe('H1')
+    expect(heading.closest('header')).toHaveClass('lg:hidden')
+  })
 })

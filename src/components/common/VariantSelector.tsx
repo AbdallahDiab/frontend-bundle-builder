@@ -34,7 +34,7 @@ export function VariantSelector({
             role="radio"
             aria-checked={isActive}
             onClick={() => onSelectVariant(variant.id)}
-            className={`inline-flex items-center gap-1.5 rounded-control border px-2 py-1 text-xs font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple ${
+            className={`inline-flex items-center gap-1 rounded-control border px-1.5 py-0.5 text-[0.6875rem] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple sm:gap-1.5 sm:px-2 sm:py-1 sm:text-xs ${
               isActive
                 ? 'border-selection bg-selection-bg text-text-primary'
                 : 'border-gray-border bg-surface text-text-secondary hover:border-gray-400'
