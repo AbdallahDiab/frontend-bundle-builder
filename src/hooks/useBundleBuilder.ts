@@ -2,15 +2,34 @@ import { useCallback, useMemo, useState } from 'react'
 import {
   calculatePricingSummary,
   decrementItemQuantity,
+  decrementVariantQuantity,
   getInitialBundleConfiguration,
   getSelectedCountByStep,
   getSelectedItems,
   getShippingSummary,
   groupSelectedItemsByCategory,
   incrementItemQuantity,
+  incrementVariantQuantity,
   setActiveVariant,
 } from '@/lib/bundle'
 import type { BundleConfiguration, ProductId, VariantId } from '@/types'
+
+function applyQuantityChange(
+  configuration: BundleConfiguration,
+  productId: ProductId,
+  variantId: VariantId | undefined,
+  direction: 'increment' | 'decrement',
+): BundleConfiguration {
+  if (variantId) {
+    return direction === 'increment'
+      ? incrementVariantQuantity(configuration, productId, variantId)
+      : decrementVariantQuantity(configuration, productId, variantId)
+  }
+
+  return direction === 'increment'
+    ? incrementItemQuantity(configuration, productId)
+    : decrementItemQuantity(configuration, productId)
+}
 
 export function useBundleBuilder(
   initialConfiguration: BundleConfiguration = getInitialBundleConfiguration(),
@@ -40,13 +59,23 @@ export function useBundleBuilder(
 
   const shippingSummary = useMemo(() => getShippingSummary(), [])
 
-  const increment = useCallback((productId: ProductId) => {
-    setConfiguration((current) => incrementItemQuantity(current, productId))
-  }, [])
+  const increment = useCallback(
+    (productId: ProductId, variantId?: VariantId) => {
+      setConfiguration((current) =>
+        applyQuantityChange(current, productId, variantId, 'increment'),
+      )
+    },
+    [],
+  )
 
-  const decrement = useCallback((productId: ProductId) => {
-    setConfiguration((current) => decrementItemQuantity(current, productId))
-  }, [])
+  const decrement = useCallback(
+    (productId: ProductId, variantId?: VariantId) => {
+      setConfiguration((current) =>
+        applyQuantityChange(current, productId, variantId, 'decrement'),
+      )
+    },
+    [],
+  )
 
   const selectVariant = useCallback(
     (productId: ProductId, variantId: VariantId) => {

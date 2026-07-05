@@ -6,7 +6,8 @@ import {
   getProductQuantity,
   getVariantQuantity,
 } from '@/lib/bundle'
-import { useBundleBuilder } from '@/hooks/useBundleBuilder'
+import { useBundleBuilderContext } from './useBundleBuilderContext'
+import type { UseBundleBuilderReturn } from '@/hooks/useBundleBuilder'
 import type { BundleStep, BundleStepId, Product } from '@/types'
 import { ProductCard } from './ProductCard'
 import cameraStepIcon from '@/assets/icons/camera-step.svg'
@@ -25,7 +26,7 @@ const STEP_ICON_SRC: Record<BundleStep['iconKey'], string> = {
 
 function getCardQuantity(
   product: Product,
-  configuration: ReturnType<typeof useBundleBuilder>['configuration'],
+  configuration: UseBundleBuilderReturn['configuration'],
 ): number {
   if (productHasVariants(product)) {
     const variantId =
@@ -50,7 +51,7 @@ type AccordionStepPanelProps = {
   headerId: string
   onToggle: () => void
   onNext: () => void
-  configuration: ReturnType<typeof useBundleBuilder>['configuration']
+  configuration: UseBundleBuilderReturn['configuration']
   onIncrement: (productId: Product['id']) => void
   onDecrement: (productId: Product['id']) => void
   onSelectVariant: (
@@ -198,7 +199,7 @@ export function AccordionBuilder() {
     increment,
     decrement,
     selectVariant,
-  } = useBundleBuilder()
+  } = useBundleBuilderContext()
 
   const handleToggleStep = useCallback((stepId: BundleStepId) => {
     setOpenStepId((current) => (current === stepId ? current : stepId))

@@ -50,6 +50,7 @@ This project uses a **data-driven architecture**:
 - **Domain types** — `src/types/bundle.ts` models products, configuration state, selected items, and pricing.
 - **Pure utilities** — `src/lib/bundle/` contains stateless functions for quantity changes, selection, grouping, and pricing.
 - **Hook** — `src/hooks/useBundleBuilder.ts` wires configuration state to derived selectors for UI layers.
+- **Provider** — `BundleBuilderProvider` shares one `useBundleBuilder` instance between `AccordionBuilder` and `ReviewPanel`.
 - **UI primitives** — `src/components/common/` provides reusable building blocks (`QuantityStepper`, `PriceDisplay`, `VariantSelector`, etc.).
 - **ProductCard** — `src/components/bundle-builder/ProductCard.tsx` is fully data-driven from the `Product` type.
 
@@ -98,7 +99,11 @@ Seeded selection produces:
 
 ### Accordion builder
 
-`AccordionBuilder` in `BuilderArea` renders the 4-step accordion from `BUNDLE_STEPS`. Accordion open-step state (`openStepId`) is **local UI state** — separate from bundle product selection in `useBundleBuilder`. Step headers show distinct selected-line counts via `selectedCountByStep` (purple). Product cards render from `PRODUCT_CATALOG` in a responsive grid (`1` column mobile, `2` columns desktop).
+`AccordionBuilder` in `BuilderArea` renders the 4-step accordion from `BUNDLE_STEPS`. Accordion open-step state (`openStepId`) is **local UI state** — separate from bundle product selection. Both accordion and review panel consume shared bundle state via `useBundleBuilderContext()`. Step headers show distinct selected-line counts via `selectedCountByStep` (purple). Product cards render from `PRODUCT_CATALOG` in a responsive grid (`1` column mobile, `2` columns desktop).
+
+### Review panel
+
+`ReviewPanel` in `ReviewPanelArea` displays the live "Your security system" summary. It reads `groupedSelectedItems`, `pricingSummary`, and `shippingSummary` from shared context. Items render under Cameras → Sensors → Accessories → Plan; **Fast Shipping** is a separate row below Plan. Quantity steppers call the same `increment` / `decrement` handlers as the accordion (with optional `variantId` for variant lines). Checkout and Save links show placeholder alerts only — persistence is not implemented yet.
 
 ## Project structure
 
@@ -109,8 +114,8 @@ src/
   components/
     common/            # Shared UI primitives (QuantityStepper, PriceDisplay, …)
     layout/            # App shell and layout
-    bundle-builder/    # AccordionBuilder, ProductCard, BuilderArea
-    review-panel/      # Review sidebar (placeholder)
+    bundle-builder/    # AccordionBuilder, ProductCard, BuilderArea, BundleBuilderProvider
+    review-panel/      # ReviewPanel, ReviewLineItem, ReviewPanelArea
   data/                # Static catalog and bundle steps
   hooks/               # useBundleBuilder state hook
   lib/bundle/          # Pure bundle business logic + tests
@@ -123,11 +128,12 @@ src/
 
 ## Current status
 
-**Step 4 completed: accordion builder UI with data-driven ProductCards.**
+**Step 5 completed: shared bundle state provider and live review panel.**
 
-- Accordion open-step state is separate from bundle selection state.
-- Step header counters use `selectedCountByStep` (distinct selected lines, not total quantity).
-- `ReviewPanelArea` is still a placeholder — full review panel UI is next.
+- `BundleBuilderProvider` shares one bundle state instance across the page.
+- Accordion and ReviewPanel stay synchronized (quantity changes sync both ways).
+- ReviewPanel consumes selected grouped items, shipping summary, and pricing summary.
+- localStorage persistence is still pending.
 
 ## Design reference
 

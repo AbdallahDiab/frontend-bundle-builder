@@ -1,10 +1,5 @@
-import { PlaceholderPanel } from '@/components/common'
+import { ReviewPanel } from './ReviewPanel'
 
 export function ReviewPanelArea() {
-  return (
-    <PlaceholderPanel
-      title="Review Panel"
-      description="Selected bundle summary and pricing will live here."
-    />
-  )
+  return <ReviewPanel />
 }

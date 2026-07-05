@@ -20,4 +20,4 @@ export type {
   VariantQuantityMap,
 } from './bundle'
 
-export { REVIEW_CATEGORY_LABELS } from './bundle'
+export { REVIEW_CATEGORY_LABELS, REVIEW_CATEGORY_ORDER } from './bundle'

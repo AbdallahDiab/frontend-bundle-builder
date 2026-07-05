@@ -18,6 +18,14 @@ export const REVIEW_CATEGORY_LABELS: Record<ProductCategory, string> = {
   accessories: 'Accessories',
 }
 
+/** Review panel section display order (distinct from builder step order). */
+export const REVIEW_CATEGORY_ORDER: ProductCategory[] = [
+  'cameras',
+  'sensors',
+  'accessories',
+  'plan',
+]
+
 export type BundleStep = {
   id: BundleStepId
   stepNumber: number

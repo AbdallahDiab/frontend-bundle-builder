@@ -1,4 +1,6 @@
 export { AccordionBuilder } from './AccordionBuilder'
+export { BundleBuilderProvider } from './BundleBuilderProvider'
+export { useBundleBuilderContext } from './useBundleBuilderContext'
 export { BuilderArea } from './BuilderArea'
 export { ProductCard } from './ProductCard'
 export type { ProductCardProps } from './ProductCard'

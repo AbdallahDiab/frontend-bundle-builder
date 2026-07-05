@@ -48,7 +48,9 @@ export function PriceDisplay({
       {activePrice && (
         <span
           className={`font-semibold leading-none ${
-            variant === 'card' ? 'text-base text-text-primary' : 'text-sm'
+            variant === 'card'
+              ? 'text-base text-text-primary'
+              : 'text-sm text-wyze-purple'
           }`}
         >
           {activePrice}

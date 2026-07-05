@@ -4,9 +4,11 @@ export {
 } from './initialState'
 export {
   decrementItemQuantity,
+  decrementVariantQuantity,
   getProductQuantity,
   getVariantQuantity,
   incrementItemQuantity,
+  incrementVariantQuantity,
   setActiveVariant,
 } from './quantity'
 export {

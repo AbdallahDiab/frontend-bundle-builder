@@ -77,6 +77,62 @@ export function incrementItemQuantity(
   }
 }
 
+export function incrementVariantQuantity(
+  configuration: BundleConfiguration,
+  productId: ProductId,
+  variantId: VariantId,
+): BundleConfiguration {
+  const product = getProductById(productId)
+  if (!product || !productHasVariants(product)) return configuration
+  if (!product.variants?.some((variant) => variant.id === variantId)) {
+    return configuration
+  }
+
+  const current = getVariantQuantity(configuration, productId, variantId)
+
+  return {
+    ...configuration,
+    quantities: {
+      ...configuration.quantities,
+      variants: {
+        ...configuration.quantities.variants,
+        [productId]: {
+          ...configuration.quantities.variants[productId],
+          [variantId]: current + 1,
+        },
+      },
+    },
+  }
+}
+
+export function decrementVariantQuantity(
+  configuration: BundleConfiguration,
+  productId: ProductId,
+  variantId: VariantId,
+): BundleConfiguration {
+  const product = getProductById(productId)
+  if (!product || !productHasVariants(product)) return configuration
+  if (!product.variants?.some((variant) => variant.id === variantId)) {
+    return configuration
+  }
+
+  const current = getVariantQuantity(configuration, productId, variantId)
+
+  return {
+    ...configuration,
+    quantities: {
+      ...configuration.quantities,
+      variants: {
+        ...configuration.quantities.variants,
+        [productId]: {
+          ...configuration.quantities.variants[productId],
+          [variantId]: clampQuantity(current - 1),
+        },
+      },
+    },
+  }
+}
+
 export function decrementItemQuantity(
   configuration: BundleConfiguration,
   productId: ProductId,

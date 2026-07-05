@@ -1,7 +1,7 @@
-import { render } from '@testing-library/react'
 import { screen, within } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
+import { renderWithBundleBuilder } from '@/test/renderWithBundleBuilder'
 import { AccordionBuilder } from './AccordionBuilder'
 
 const STEP_HEADERS = {
@@ -13,7 +13,7 @@ const STEP_HEADERS = {
 
 describe('AccordionBuilder', () => {
   it('opens step 1 by default', () => {
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     const camerasHeader = screen.getByRole('button', {
       name: STEP_HEADERS.cameras,
@@ -26,7 +26,7 @@ describe('AccordionBuilder', () => {
   })
 
   it('renders all four step headers', () => {
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     expect(
       screen.getByRole('button', { name: STEP_HEADERS.cameras }),
@@ -43,7 +43,7 @@ describe('AccordionBuilder', () => {
   })
 
   it('renders selected counts from seeded bundle state', () => {
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     const camerasHeader = screen.getByRole('button', {
       name: STEP_HEADERS.cameras,
@@ -66,7 +66,7 @@ describe('AccordionBuilder', () => {
 
   it('opens a collapsed step when its header is clicked', async () => {
     const user = userEvent.setup()
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     const planHeader = screen.getByRole('button', { name: STEP_HEADERS.plan })
     expect(planHeader).toHaveAttribute('aria-expanded', 'false')
@@ -84,7 +84,7 @@ describe('AccordionBuilder', () => {
 
   it('advances to the next step when Next is clicked', async () => {
     const user = userEvent.setup()
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     await user.click(
       screen.getByRole('button', { name: /next: choose your plan/i }),
@@ -100,7 +100,7 @@ describe('AccordionBuilder', () => {
 
   it('does not show a Next button on the final step', async () => {
     const user = userEvent.setup()
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     await user.click(
       screen.getByRole('button', { name: STEP_HEADERS.accessories }),
@@ -112,7 +112,7 @@ describe('AccordionBuilder', () => {
   })
 
   it('renders camera product cards from catalog data in step 1', () => {
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     expect(screen.getByLabelText('Wyze Cam v4')).toBeInTheDocument()
     expect(screen.getByLabelText('Wyze Cam Pan v3')).toBeInTheDocument()
@@ -123,7 +123,7 @@ describe('AccordionBuilder', () => {
 
   it('updates quantity from within the accordion', async () => {
     const user = userEvent.setup()
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     const doorbellCard = screen.getByLabelText('Wyze Duo Cam Doorbell')
     const incrementButton = within(doorbellCard).getByRole('button', {
@@ -138,7 +138,7 @@ describe('AccordionBuilder', () => {
 
   it('switches variants from within the accordion', async () => {
     const user = userEvent.setup()
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     const camV4Card = screen.getByLabelText('Wyze Cam v4')
     const blackVariant = within(camV4Card).getByRole('radio', {
@@ -155,7 +155,7 @@ describe('AccordionBuilder', () => {
 
   it('shows plan products when the plan step is opened', async () => {
     const user = userEvent.setup()
-    render(<AccordionBuilder />)
+    renderWithBundleBuilder(<AccordionBuilder />)
 
     await user.click(screen.getByRole('button', { name: STEP_HEADERS.plan }))
 
