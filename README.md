@@ -48,7 +48,7 @@ This project uses a **data-driven architecture**:
 
 - **Catalog** — `src/data/products.ts` and `src/data/bundleSteps.ts` define products, variants, steps, and seeded quantities.
 - **Domain types** — `src/types/bundle.ts` models products, configuration state, selected items, and pricing.
-- **Pure utilities** — `src/lib/bundle/` contains stateless functions for quantity changes, selection, grouping, and pricing.
+- **Pure utilities** — `src/lib/bundle/` contains stateless functions for quantity changes, selection, grouping, pricing, and localStorage persistence.
 - **Hook** — `src/hooks/useBundleBuilder.ts` wires configuration state to derived selectors for UI layers.
 - **Provider** — `BundleBuilderProvider` shares one `useBundleBuilder` instance between `AccordionBuilder` and `ReviewPanel`.
 - **UI primitives** — `src/components/common/` provides reusable building blocks (`QuantityStepper`, `PriceDisplay`, `VariantSelector`, etc.).
@@ -103,7 +103,23 @@ Seeded selection produces:
 
 ### Review panel
 
-`ReviewPanel` in `ReviewPanelArea` displays the live "Your security system" summary. It reads `groupedSelectedItems`, `pricingSummary`, and `shippingSummary` from shared context. Items render under Cameras → Sensors → Accessories → Plan; **Fast Shipping** is a separate row below Plan. Quantity steppers call the same `increment` / `decrement` handlers as the accordion (with optional `variantId` for variant lines). Checkout and Save links show placeholder alerts only — persistence is not implemented yet.
+`ReviewPanel` in `ReviewPanelArea` displays the live "Your security system" summary. It reads `groupedSelectedItems`, `pricingSummary`, and `shippingSummary` from shared context. Items render under Cameras → Sensors → Accessories → Plan; **Fast Shipping** is a separate row below Plan. Quantity steppers call the same `increment` / `decrement` handlers as the accordion (with optional `variantId` for variant lines). Checkout and Save show non-blocking toast feedback. Save persists the current bundle configuration to localStorage.
+
+### Persistence
+
+Bundle configuration is saved client-side under the localStorage key **`bundle-builder-config-v1`**.
+
+| Stored                | Not stored                          |
+| --------------------- | ----------------------------------- |
+| `quantities.products` | `selectedItems`, grouped items      |
+| `quantities.variants` | `pricingSummary`, totals, savings   |
+| `activeVariants`      | Shipping summary, derived selectors |
+
+**Save behavior:** Clicking "Save my system for later" writes the current `configuration` (`quantities` + `activeVariants`) to localStorage. No auto-save on every quantity change.
+
+**Restore behavior:** On app load, `useBundleBuilder` reads localStorage via `loadBundleConfiguration()` in a lazy state initializer. If valid saved data exists, the UI restores with those quantities and active variants.
+
+**Invalid data fallback:** Missing key, invalid JSON, unknown product ids, unknown variant ids, or malformed payloads fall back to `getInitialBundleConfiguration()` without crashing. Unknown catalog entries in saved data are ignored during sanitization.
 
 ## Project structure
 
@@ -112,7 +128,7 @@ src/
   app/                 # App entry composition
   assets/              # Static assets (icons, product images, references)
   components/
-    common/            # Shared UI primitives (QuantityStepper, PriceDisplay, …)
+    common/            # Shared UI primitives (QuantityStepper, PriceDisplay, Toast, …)
     layout/            # App shell and layout
     bundle-builder/    # AccordionBuilder, ProductCard, BuilderArea, BundleBuilderProvider
     review-panel/      # ReviewPanel, ReviewLineItem, ReviewPanelArea
@@ -128,12 +144,14 @@ src/
 
 ## Current status
 
-**Step 5 completed: shared bundle state provider and live review panel.**
+**Step 6 completed: localStorage persistence and non-blocking feedback messages.**
 
-- `BundleBuilderProvider` shares one bundle state instance across the page.
-- Accordion and ReviewPanel stay synchronized (quantity changes sync both ways).
-- ReviewPanel consumes selected grouped items, shipping summary, and pricing summary.
-- localStorage persistence is still pending.
+- `bundle-builder-config-v1` stores `quantities` and `activeVariants` only.
+- Saved configuration restores on reload via `loadBundleConfiguration()`.
+- Invalid or stale saved data falls back to seeded defaults safely.
+- "Save my system for later" persists the current shopper configuration.
+- Checkout and Save use accessible toast feedback instead of `window.alert`.
+- Accordion and ReviewPanel remain synchronized after restore.
 
 ## Design reference
 

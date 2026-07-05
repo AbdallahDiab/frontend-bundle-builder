@@ -1,9 +1,11 @@
 import satisfactionBadge from '@/assets/icons/satisfaction-guarantee.png'
 import shippingTruckIcon from '@/assets/icons/shipping-truck.svg'
-import { PriceDisplay, ProductImage } from '@/components/common'
+import { PriceDisplay, ProductImage, useToast } from '@/components/common'
 import { useBundleBuilderContext } from '@/components/bundle-builder/useBundleBuilderContext'
+import { saveBundleConfiguration } from '@/lib/bundle'
 import { REVIEW_CATEGORY_LABELS, REVIEW_CATEGORY_ORDER } from '@/types'
 import { formatCurrency } from '@/utils/formatCurrency'
+import { useState } from 'react'
 import { ReviewLineItem } from './ReviewLineItem'
 
 function getLineItemKey(productId: string, variantId?: string): string {
@@ -12,19 +14,32 @@ function getLineItemKey(productId: string, variantId?: string): string {
 
 export function ReviewPanel() {
   const {
+    configuration,
     groupedSelectedItems,
     pricingSummary,
     shippingSummary,
     increment,
     decrement,
   } = useBundleBuilderContext()
+  const { showToast } = useToast()
+  const [saveAcknowledged, setSaveAcknowledged] = useState(false)
 
   const handleCheckout = () => {
-    window.alert('Checkout is not implemented in this prototype.')
+    showToast('Checkout is not implemented in this prototype.')
   }
 
   const handleSaveForLater = () => {
-    window.alert('Persistence will be added in the next step.')
+    const saved = saveBundleConfiguration(configuration)
+
+    if (saved) {
+      setSaveAcknowledged(true)
+      showToast(
+        "Your system has been saved. We'll restore it next time you visit.",
+      )
+      return
+    }
+
+    showToast('Unable to save your system right now. Please try again.')
   }
 
   return (
@@ -152,13 +167,23 @@ export function ReviewPanel() {
                 Checkout
               </button>
 
-              <button
-                type="button"
-                className="mx-auto text-sm text-text-secondary underline underline-offset-2 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple sm:mx-0"
-                onClick={handleSaveForLater}
-              >
-                Save my system for later
-              </button>
+              <div className="flex flex-col items-center gap-1 sm:items-start">
+                <button
+                  type="button"
+                  className="text-sm text-text-secondary underline underline-offset-2 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+                  onClick={handleSaveForLater}
+                >
+                  Save my system for later
+                </button>
+                {saveAcknowledged ? (
+                  <p
+                    className="m-0 text-xs text-selection"
+                    data-testid="save-acknowledgement"
+                  >
+                    Saved for your next visit
+                  </p>
+                ) : null}
+              </div>
             </div>
           </div>
         </footer>

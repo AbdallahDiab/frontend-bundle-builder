@@ -3,6 +3,14 @@ export {
   getActiveVariantId,
 } from './initialState'
 export {
+  BUNDLE_BUILDER_STORAGE_KEY,
+  clearSavedBundleConfiguration,
+  loadBundleConfiguration,
+  sanitizeSavedBundleConfiguration,
+  saveBundleConfiguration,
+} from './persistence'
+export type { SavedBundleConfiguration } from './persistence'
+export {
   decrementItemQuantity,
   decrementVariantQuantity,
   getProductQuantity,

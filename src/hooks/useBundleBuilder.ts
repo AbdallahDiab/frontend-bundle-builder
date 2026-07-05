@@ -3,13 +3,13 @@ import {
   calculatePricingSummary,
   decrementItemQuantity,
   decrementVariantQuantity,
-  getInitialBundleConfiguration,
   getSelectedCountByStep,
   getSelectedItems,
   getShippingSummary,
   groupSelectedItemsByCategory,
   incrementItemQuantity,
   incrementVariantQuantity,
+  loadBundleConfiguration,
   setActiveVariant,
 } from '@/lib/bundle'
 import type { BundleConfiguration, ProductId, VariantId } from '@/types'
@@ -31,11 +31,10 @@ function applyQuantityChange(
     : decrementItemQuantity(configuration, productId)
 }
 
-export function useBundleBuilder(
-  initialConfiguration: BundleConfiguration = getInitialBundleConfiguration(),
-) {
-  const [configuration, setConfiguration] =
-    useState<BundleConfiguration>(initialConfiguration)
+export function useBundleBuilder(initialConfiguration?: BundleConfiguration) {
+  const [configuration, setConfiguration] = useState<BundleConfiguration>(
+    () => initialConfiguration ?? loadBundleConfiguration(),
+  )
 
   const selectedItems = useMemo(
     () => getSelectedItems(configuration),

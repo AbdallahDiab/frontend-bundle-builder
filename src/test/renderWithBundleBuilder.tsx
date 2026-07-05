@@ -1,5 +1,6 @@
 import { render, type RenderOptions } from '@testing-library/react'
 import type { ReactElement } from 'react'
+import { ToastProvider } from '@/components/common'
 import { BundleBuilderProvider } from '@/components/bundle-builder/BundleBuilderProvider'
 
 export function renderWithBundleBuilder(
@@ -8,7 +9,9 @@ export function renderWithBundleBuilder(
 ) {
   return render(ui, {
     wrapper: ({ children }) => (
-      <BundleBuilderProvider>{children}</BundleBuilderProvider>
+      <ToastProvider>
+        <BundleBuilderProvider>{children}</BundleBuilderProvider>
+      </ToastProvider>
     ),
     ...options,
   })

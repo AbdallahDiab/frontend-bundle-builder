@@ -1,8 +1,13 @@
 import { screen, within } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { AccordionBuilder } from '@/components/bundle-builder/AccordionBuilder'
 import { ReviewPanel } from '@/components/review-panel/ReviewPanel'
+import { PRODUCT_IDS } from '@/data/products'
+import {
+  BUNDLE_BUILDER_STORAGE_KEY,
+  saveBundleConfiguration,
+} from '@/lib/bundle'
 import { renderWithBundleBuilder } from '@/test/renderWithBundleBuilder'
 
 function renderBundlePage() {
@@ -100,32 +105,49 @@ describe('ReviewPanel', () => {
     expect(within(planLine).getByText('$12.99/mo')).toBeInTheDocument()
   })
 
-  it('shows checkout placeholder action', async () => {
+  it('shows checkout feedback message', async () => {
     const user = userEvent.setup()
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
     renderWithBundleBuilder(<ReviewPanel />)
 
     await user.click(screen.getByRole('button', { name: 'Checkout' }))
 
-    expect(alertSpy).toHaveBeenCalledWith(
-      'Checkout is not implemented in this prototype.',
-    )
-    alertSpy.mockRestore()
+    expect(
+      screen.getByRole('status', {
+        name: 'Checkout is not implemented in this prototype.',
+      }),
+    ).toBeInTheDocument()
   })
 
-  it('shows save placeholder action', async () => {
+  it('saves configuration and shows success feedback', async () => {
     const user = userEvent.setup()
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
-    renderWithBundleBuilder(<ReviewPanel />)
+    renderBundlePage()
+
+    const camV4Line = screen.getByTestId('review-line-wyze-cam-v4-white')
+    await user.click(
+      within(camV4Line).getByRole('button', { name: 'Increase quantity' }),
+    )
 
     await user.click(
       screen.getByRole('button', { name: 'Save my system for later' }),
     )
 
-    expect(alertSpy).toHaveBeenCalledWith(
-      'Persistence will be added in the next step.',
+    expect(
+      screen.getByRole('status', {
+        name: "Your system has been saved. We'll restore it next time you visit.",
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('save-acknowledgement')).toHaveTextContent(
+      'Saved for your next visit',
     )
-    alertSpy.mockRestore()
+
+    const saved = JSON.parse(
+      window.localStorage.getItem(BUNDLE_BUILDER_STORAGE_KEY)!,
+    )
+
+    expect(saved.quantities.variants[PRODUCT_IDS.WYZE_CAM_V4].white).toBe(2)
+    expect(saved.activeVariants[PRODUCT_IDS.WYZE_CAM_V4]).toBe('white')
+    expect(saved).not.toHaveProperty('selectedItems')
+    expect(saved).not.toHaveProperty('pricingSummary')
   })
 })
 
@@ -187,5 +209,90 @@ describe('BundleBuilderProvider shared state', () => {
     )
 
     expect(screen.getByTestId('review-total')).toHaveTextContent('$215.87')
+  })
+
+  it('restores saved configuration when the provider remounts', () => {
+    saveBundleConfiguration({
+      activeVariants: {
+        [PRODUCT_IDS.WYZE_CAM_V4]: 'black',
+      },
+      quantities: {
+        products: {},
+        variants: {
+          [PRODUCT_IDS.WYZE_CAM_V4]: {
+            black: 3,
+          },
+        },
+      },
+    })
+
+    const { unmount } = renderBundlePage()
+
+    expect(
+      screen.getByTestId('review-line-wyze-cam-v4-black'),
+    ).toBeInTheDocument()
+    expect(
+      within(screen.getByTestId('review-line-wyze-cam-v4-black')).getByText(
+        '3',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByTestId('review-line-wyze-cam-v4-white'),
+    ).not.toBeInTheDocument()
+
+    unmount()
+    renderBundlePage()
+
+    expect(
+      screen.getByTestId('review-line-wyze-cam-v4-black'),
+    ).toBeInTheDocument()
+    expect(
+      within(screen.getByTestId('review-line-wyze-cam-v4-black')).getByText(
+        '3',
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('keeps AccordionBuilder and ReviewPanel synced after restore', async () => {
+    saveBundleConfiguration({
+      activeVariants: {
+        [PRODUCT_IDS.WYZE_CAM_V4]: 'black',
+      },
+      quantities: {
+        products: {},
+        variants: {
+          [PRODUCT_IDS.WYZE_CAM_V4]: {
+            black: 2,
+          },
+        },
+      },
+    })
+
+    const user = userEvent.setup()
+    renderBundlePage()
+
+    const camV4Card = screen.getByLabelText('Wyze Cam v4')
+    expect(within(camV4Card).getByText('2')).toBeInTheDocument()
+
+    const blackLine = screen.getByTestId('review-line-wyze-cam-v4-black')
+    await user.click(
+      within(blackLine).getByRole('button', { name: 'Increase quantity' }),
+    )
+
+    expect(within(camV4Card).getByText('3')).toBeInTheDocument()
+    expect(
+      within(screen.getByTestId('review-line-wyze-cam-v4-black')).getByText(
+        '3',
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('uses seeded defaults when saved configuration is invalid', () => {
+    window.localStorage.setItem(BUNDLE_BUILDER_STORAGE_KEY, '{bad-json')
+
+    renderWithBundleBuilder(<ReviewPanel />)
+
+    expect(screen.getByTestId('review-total')).toHaveTextContent('$187.89')
+    expect(screen.getByText('Wyze Cam Pan v3')).toBeInTheDocument()
   })
 })
