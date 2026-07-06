@@ -24,7 +24,7 @@ export function ReviewLineItem({
 
   return (
     <li
-      className="flex items-center gap-2 border-b border-gray-300/70 py-2.5 last:border-b-0 sm:gap-3 sm:py-3"
+      className="-mx-1 flex items-center gap-2 rounded-control border-b border-gray-300/70 px-1 py-2.5 motion-safe:transition-colors motion-safe:duration-150 motion-safe:ease-out last:border-b-0 hover:bg-gray-200/30 sm:gap-3 sm:py-3"
       data-testid={`review-line-${getLineItemKey(item)}`}
     >
       <div className="flex size-11 shrink-0 items-center justify-center rounded-control bg-surface p-1 sm:size-12">

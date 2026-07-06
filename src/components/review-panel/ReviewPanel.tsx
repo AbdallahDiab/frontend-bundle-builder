@@ -45,7 +45,7 @@ export function ReviewPanel() {
   return (
     <aside
       aria-label="Your security system review"
-      className="lg:sticky lg:top-8 lg:max-h-[calc(100dvh-4rem)] lg:self-start lg:overflow-y-auto"
+      className="w-full min-w-0 xl:w-[var(--layout-review-width)] lg:sticky lg:top-8 lg:max-h-[calc(100dvh-4rem)] lg:self-start lg:overflow-y-auto"
     >
       <div className="overflow-hidden rounded-card bg-review-panel shadow-panel">
         <header className="border-b border-gray-300/70 px-4 py-4 sm:px-5 sm:py-5">
@@ -168,7 +168,7 @@ export function ReviewPanel() {
 
           <button
             type="button"
-            className="mt-4 w-full min-h-11 rounded-control bg-wyze-purple px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-wyze-purple/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+            className="mt-4 w-full min-h-11 cursor-pointer rounded-control bg-wyze-purple px-6 py-3 text-base font-semibold text-white motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-200 motion-safe:ease-out hover:bg-wyze-purple/90 hover:shadow-panel motion-safe:active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
             onClick={handleCheckout}
           >
             Checkout
@@ -177,7 +177,7 @@ export function ReviewPanel() {
           <div className="mt-3 flex flex-col items-center gap-1">
             <button
               type="button"
-              className="min-h-11 text-sm text-text-secondary underline underline-offset-2 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+              className="min-h-11 cursor-pointer text-sm text-text-secondary underline underline-offset-2 motion-safe:transition-[color,text-decoration-color] motion-safe:duration-200 motion-safe:ease-out hover:text-text-primary hover:decoration-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
               onClick={handleSaveForLater}
             >
               Save my system for later

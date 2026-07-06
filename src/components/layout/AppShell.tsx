@@ -9,9 +9,13 @@ export function AppShell() {
       <div className="min-h-dvh bg-page-bg">
         <MainContainer>
           <BundleBuilderProvider>
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_var(--width-review-panel)] lg:items-start lg:gap-10 xl:gap-12">
-              <BuilderArea />
-              <ReviewPanelArea />
+            <div className="grid grid-cols-1 gap-8 xl:grid-cols-[var(--layout-builder-width)_var(--layout-review-width)] xl:items-start xl:gap-[var(--layout-desktop-gap)]">
+              <div className="w-full min-w-0 xl:w-[var(--layout-builder-width)]">
+                <BuilderArea />
+              </div>
+              <div className="w-full min-w-0 xl:w-[var(--layout-review-width)]">
+                <ReviewPanelArea />
+              </div>
             </div>
           </BundleBuilderProvider>
         </MainContainer>

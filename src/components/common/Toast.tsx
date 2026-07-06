@@ -101,12 +101,22 @@ type ToastMessageProps = {
 
 function ToastMessage({ toast, onDismiss }: ToastMessageProps) {
   const titleId = useId()
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setIsVisible(true))
+    return () => cancelAnimationFrame(frame)
+  }, [])
 
   return (
     <div
       role="status"
       aria-labelledby={titleId}
-      className="pointer-events-auto flex max-w-md items-start gap-3 rounded-card border border-gray-300/80 bg-surface px-4 py-3 shadow-panel"
+      className={`pointer-events-auto flex max-w-md items-start gap-3 rounded-card border border-gray-300/80 bg-surface px-4 py-3 shadow-panel motion-safe:transition-[opacity,transform] motion-safe:duration-200 motion-safe:ease-out ${
+        isVisible
+          ? 'motion-safe:translate-y-0 motion-safe:opacity-100'
+          : 'motion-safe:-translate-y-1 motion-safe:opacity-0'
+      }`}
     >
       <p id={titleId} className="m-0 flex-1 text-sm text-text-primary">
         {toast.message}
@@ -114,7 +124,7 @@ function ToastMessage({ toast, onDismiss }: ToastMessageProps) {
       <button
         type="button"
         aria-label="Dismiss notification"
-        className="shrink-0 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+        className="shrink-0 cursor-pointer rounded-control px-1 py-0.5 text-sm font-medium text-text-secondary motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out hover:bg-gray-200/60 hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
         onClick={onDismiss}
       >
         Dismiss

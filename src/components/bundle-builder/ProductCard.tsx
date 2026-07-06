@@ -38,12 +38,12 @@ export function ProductCard({
 
   return (
     <article
-      className={`relative flex h-full flex-col overflow-hidden rounded-card bg-surface shadow-card transition-[border-color,background-color,box-shadow] ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-card bg-surface shadow-card motion-safe:transition-[border-color,background-color,box-shadow] motion-safe:duration-200 motion-safe:ease-out ${
         compact ? 'sm:flex-row' : 'sm:flex-row'
       } ${compact ? 'sm:min-h-[9rem]' : 'sm:min-h-[11.5rem]'} ${
         selected
-          ? 'border-2 border-wyze-purple bg-selection-bg shadow-panel'
-          : 'border border-gray-300'
+          ? 'border-2 border-wyze-purple bg-selection-bg shadow-panel hover:border-wyze-purple hover:shadow-panel'
+          : 'border border-gray-300 hover:border-gray-400 hover:shadow-panel'
       } ${className}`.trim()}
       aria-label={product.name}
       data-selected={selected ? 'true' : 'false'}
@@ -101,7 +101,7 @@ export function ProductCard({
               href={product.learnMoreUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-0.5 inline-block text-xs text-link underline-offset-2 hover:underline sm:text-sm"
+              className="mt-0.5 inline-block cursor-pointer text-xs text-link underline-offset-2 motion-safe:transition-[color,text-decoration-color] motion-safe:duration-200 motion-safe:ease-out hover:text-link hover:underline sm:text-sm"
             >
               Learn More
             </a>

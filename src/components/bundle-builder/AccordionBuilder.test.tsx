@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/dom'
+import { screen, waitFor, within } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { renderWithBundleBuilder } from '@/test/renderWithBundleBuilder'
@@ -62,6 +62,63 @@ describe('AccordionBuilder', () => {
     expect(
       within(accessoriesHeader).getByText('1 selected'),
     ).toBeInTheDocument()
+  })
+
+  it('closes step 1 when its open header is clicked', async () => {
+    const user = userEvent.setup()
+    renderWithBundleBuilder(<AccordionBuilder />)
+
+    const camerasHeader = screen.getByRole('button', {
+      name: STEP_HEADERS.cameras,
+    })
+    expect(camerasHeader).toHaveAttribute('aria-expanded', 'true')
+
+    await user.click(camerasHeader)
+
+    expect(camerasHeader).toHaveAttribute('aria-expanded', 'false')
+    expect(
+      screen.queryByRole('region', { name: STEP_HEADERS.cameras }),
+    ).not.toBeInTheDocument()
+    expect(within(camerasHeader).getByText('2 selected')).toBeInTheDocument()
+  })
+
+  it('reopens step 1 when its collapsed header is clicked', async () => {
+    const user = userEvent.setup()
+    renderWithBundleBuilder(<AccordionBuilder />)
+
+    const camerasHeader = screen.getByRole('button', {
+      name: STEP_HEADERS.cameras,
+    })
+
+    await user.click(camerasHeader)
+    expect(camerasHeader).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(camerasHeader)
+
+    expect(camerasHeader).toHaveAttribute('aria-expanded', 'true')
+    expect(
+      screen.getByRole('region', { name: STEP_HEADERS.cameras }),
+    ).toBeInTheDocument()
+  })
+
+  it('updates aria-expanded when toggling accordion steps', async () => {
+    const user = userEvent.setup()
+    renderWithBundleBuilder(<AccordionBuilder />)
+
+    const camerasHeader = screen.getByRole('button', {
+      name: STEP_HEADERS.cameras,
+    })
+    const planHeader = screen.getByRole('button', { name: STEP_HEADERS.plan })
+
+    expect(camerasHeader).toHaveAttribute('aria-expanded', 'true')
+    expect(planHeader).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(camerasHeader)
+    expect(camerasHeader).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(planHeader)
+    expect(planHeader).toHaveAttribute('aria-expanded', 'true')
+    expect(camerasHeader).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('opens a collapsed step when its header is clicked', async () => {
@@ -160,7 +217,9 @@ describe('AccordionBuilder', () => {
     await user.click(screen.getByRole('button', { name: STEP_HEADERS.plan }))
 
     expect(screen.getByLabelText('Cam Unlimited')).toBeInTheDocument()
-    expect(screen.queryByLabelText('Wyze Cam v4')).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.queryByLabelText('Wyze Cam v4')).not.toBeInTheDocument()
+    })
   })
 
   it('renders the mobile-only heading with lg:hidden visibility class', () => {
