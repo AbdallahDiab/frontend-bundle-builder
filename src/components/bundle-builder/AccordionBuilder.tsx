@@ -234,9 +234,9 @@ function AccordionStepPanel({
             inert={!isOpen ? true : undefined}
             className="min-h-0 overflow-hidden"
           >
-            <div className="px-4 pb-5 sm:px-5 sm:pb-6">
+            <div className="px-4 pb-5 sm:px-5 sm:pb-6 lg:p-[15px]">
               {products.length > 0 ? (
-                <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 md:grid-cols-2 md:gap-4 [&>li:last-child:nth-child(odd)]:md:col-span-2 [&>li:last-child:nth-child(odd)]:md:mx-auto [&>li:last-child:nth-child(odd)]:md:max-w-[calc(50%-0.5rem)] [&>li:last-child:nth-child(odd)]:md:w-full">
+                <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 md:grid-cols-2 md:gap-[15px] [&>li:last-child:nth-child(odd)]:md:col-span-2 [&>li:last-child:nth-child(odd)]:md:mx-auto [&>li:last-child:nth-child(odd)]:md:max-w-[calc(50%-0.46875rem)] [&>li:last-child:nth-child(odd)]:md:w-full">
                   {products.map((product) => {
                     const activeVariantId =
                       getActiveVariantId(configuration, product.id) ??

@@ -39,6 +39,8 @@ export type ProductVariant = {
   id: VariantId
   name: string
   imageSrc: string
+  /** Optional color swatch icon for variant selector buttons. */
+  swatchSrc?: string
   priceCents: number
   compareAtPriceCents?: number
   /** Seeded quantity when the bundle first loads. */

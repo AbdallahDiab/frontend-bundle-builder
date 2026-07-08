@@ -14,6 +14,7 @@ export const PRODUCT_IDS = {
 } as const satisfies Record<string, ProductId>
 
 const productImage = (slug: string) => `/src/assets/products/${slug}.png`
+const productSwatch = (slug: string) => `/src/assets/products/${slug}.svg`
 
 /** Shipping summary row — not a selectable catalog product. */
 export const BUNDLE_SHIPPING_SUMMARY: ShippingSummaryRow = {
@@ -40,6 +41,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
         id: 'white',
         name: 'White',
         imageSrc: productImage('wyze-cam-v4-white'),
+        swatchSrc: productSwatch('wyze-cam-v4-swatch-white'),
         priceCents: 2798,
         compareAtPriceCents: 3598,
         initialQuantity: 1,
@@ -48,6 +50,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
         id: 'grey',
         name: 'Grey',
         imageSrc: productImage('wyze-cam-v4-grey'),
+        swatchSrc: productSwatch('wyze-cam-v4-swatch-grey'),
         priceCents: 2798,
         compareAtPriceCents: 3598,
       },
@@ -55,6 +58,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
         id: 'black',
         name: 'Black',
         imageSrc: productImage('wyze-cam-v4-black'),
+        swatchSrc: productSwatch('wyze-cam-v4-swatch-black'),
         priceCents: 2798,
         compareAtPriceCents: 3598,
       },
@@ -75,6 +79,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
         id: 'white',
         name: 'White',
         imageSrc: productImage('wyze-cam-pan-v3-white'),
+        swatchSrc: productSwatch('wyze-cam-pan-v3-swatch-white'),
         priceCents: 2399,
         compareAtPriceCents: 2899,
         initialQuantity: 2,
@@ -83,6 +88,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
         id: 'black',
         name: 'Black',
         imageSrc: productImage('wyze-cam-pan-v3-black'),
+        swatchSrc: productSwatch('wyze-cam-pan-v3-swatch-black'),
         priceCents: 2399,
         compareAtPriceCents: 2899,
       },

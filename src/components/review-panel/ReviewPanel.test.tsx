@@ -19,6 +19,21 @@ function renderBundlePage() {
   )
 }
 
+async function removeAllSelectedItems(
+  user: ReturnType<typeof userEvent.setup>,
+) {
+  while (true) {
+    const lineItems = screen.queryAllByTestId(/review-line-/)
+    const firstLineItem = lineItems.at(0)
+    if (!firstLineItem) break
+    await user.click(
+      within(firstLineItem).getByRole('button', {
+        name: 'Decrease quantity',
+      }),
+    )
+  }
+}
+
 describe('ReviewPanel', () => {
   it('renders the review panel title and subtitle', () => {
     renderWithBundleBuilder(<ReviewPanel />)
@@ -119,6 +134,49 @@ describe('ReviewPanel', () => {
     ).toBeInTheDocument()
   })
 
+  it('shows a clean empty state after all selected items are removed', async () => {
+    const user = userEvent.setup()
+    renderBundlePage()
+
+    await removeAllSelectedItems(user)
+
+    expect(screen.getByTestId('review-empty-state')).toBeInTheDocument()
+    expect(screen.getByText('Your system is empty')).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Add products from the builder to see your security system summary here.',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: 'Cameras' }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByTestId('review-shipping-row')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('review-savings')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('review-compare-total')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Save my system for later' }),
+    ).not.toBeInTheDocument()
+    expect(screen.getByTestId('review-total')).toHaveTextContent('$0.00')
+  })
+
+  it('disables checkout and does not show checkout toast when review is empty', async () => {
+    const user = userEvent.setup()
+    renderBundlePage()
+
+    await removeAllSelectedItems(user)
+
+    const checkoutButton = screen.getByRole('button', { name: 'Checkout' })
+    expect(checkoutButton).toBeDisabled()
+
+    await user.click(checkoutButton)
+
+    expect(
+      screen.queryByRole('status', {
+        name: 'Checkout is not implemented in this prototype.',
+      }),
+    ).not.toBeInTheDocument()
+  })
+
   it('saves configuration and shows success feedback', async () => {
     const user = userEvent.setup()
     renderBundlePage()
@@ -149,6 +207,21 @@ describe('ReviewPanel', () => {
     expect(saved.activeVariants[PRODUCT_IDS.WYZE_CAM_V4]).toBe('white')
     expect(saved).not.toHaveProperty('selectedItems')
     expect(saved).not.toHaveProperty('pricingSummary')
+  })
+
+  it('keeps non-empty review behavior unchanged', () => {
+    renderWithBundleBuilder(<ReviewPanel />)
+
+    expect(screen.getByText('Cameras')).toBeInTheDocument()
+    expect(screen.getByTestId('review-shipping-row')).toBeInTheDocument()
+    expect(screen.getByTestId('review-savings')).toBeInTheDocument()
+    expect(screen.getByTestId('review-compare-total')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Save my system for later' }),
+    ).toBeInTheDocument()
+
+    const checkoutButton = screen.getByRole('button', { name: 'Checkout' })
+    expect(checkoutButton).toBeEnabled()
   })
 })
 

@@ -47,6 +47,7 @@ export function ReviewLineItem({
         decrementDisabled={item.quantity <= 0}
         ariaLabel={`${item.productName} quantity`}
         size="sm"
+        variant="review"
         className="shrink-0"
       />
 

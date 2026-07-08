@@ -51,7 +51,7 @@ export function ProductCard({
       <div
         className={`relative flex shrink-0 items-center justify-center ${
           compact
-            ? 'px-3 pt-8 pb-3 sm:w-[32%] sm:max-w-[7.5rem] sm:px-2 sm:py-4'
+            ? 'px-[11px] pt-8 pb-[11px] sm:w-[32%] sm:max-w-[7.5rem] sm:px-2 sm:py-4'
             : 'px-4 pt-10 pb-4 sm:w-[38%] sm:px-6 sm:py-6'
         }`}
       >
@@ -77,7 +77,7 @@ export function ProductCard({
       <div
         className={`flex min-w-0 flex-1 flex-col ${
           compact
-            ? 'gap-1.5 px-3 pb-3 sm:gap-2 sm:py-3 sm:pr-3 sm:pl-0'
+            ? 'gap-1.5 px-[11px] pb-[11px] sm:gap-2 sm:py-[11px] sm:pr-[11px] sm:pl-0'
             : 'gap-3 px-4 pb-4 sm:py-5 sm:pr-5 sm:pl-2'
         }`}
       >
@@ -85,26 +85,33 @@ export function ProductCard({
           <h3
             className={`truncate leading-snug font-semibold text-text-primary ${
               compact ? 'text-sm' : 'text-base'
-            }`}
+            } sm:font-gilroy-semibold sm:text-base sm:font-normal sm:tracking-[0.6px]`}
           >
             {product.name}
           </h3>
           <p
-            className={`mt-0.5 line-clamp-2 leading-snug text-text-secondary ${
-              compact ? 'text-xs' : 'text-sm'
-            }`}
+            className="mt-0.5 line-clamp-2 font-gilroy-medium text-xs font-normal leading-snug tracking-[0.6px] text-gray-600"
           >
             {product.description}
           </p>
           {product.learnMoreUrl && (
-            <a
-              href={product.learnMoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-0.5 inline-block cursor-pointer text-xs text-link underline-offset-2 motion-safe:transition-[color,text-decoration-color] motion-safe:duration-200 motion-safe:ease-out hover:text-link hover:underline sm:text-sm"
+            <span
+              role="button"
+              tabIndex={0}
+              className="mt-0.5 inline-block cursor-pointer font-gilroy-medium text-xs font-normal tracking-[0.6px] text-link underline decoration-solid underline-offset-2"
+              onClick={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  event.stopPropagation()
+                }
+              }}
             >
               Learn More
-            </a>
+            </span>
           )}
         </div>
 
