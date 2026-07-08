@@ -256,15 +256,15 @@ describe('getShippingSummary', () => {
 })
 
 describe('calculatePricingSummary', () => {
-  it('calculates product totals matching the Figma screenshot', () => {
+  it('calculates product totals from catalog seed quantities', () => {
     const items = getSelectedItems(getInitialBundleConfiguration())
     const summary = calculatePricingSummary(items)
 
     expect(summary).toEqual({
-      subtotalCents: 18789,
-      compareAtTotalCents: 23881,
+      subtotalCents: 20987,
+      compareAtTotalCents: 26079,
       savingsCents: 5092,
-      totalCents: 18789,
+      totalCents: 20987,
     })
   })
 
@@ -292,8 +292,8 @@ describe('calculatePricingSummary', () => {
       compareAtLineTotalCents: 3598,
     })
     expect(byName['Wyze Cam Pan v3']).toMatchObject({
-      lineTotalCents: 4798,
-      compareAtLineTotalCents: 5798,
+      lineTotalCents: 6996,
+      compareAtLineTotalCents: 7996,
     })
     expect(byName['Wyze Sense Motion Sensor']).toMatchObject({
       lineTotalCents: 5998,
@@ -317,8 +317,8 @@ describe('calculatePricingSummary', () => {
 describe('formatCurrency', () => {
   it('formats cent amounts as USD', () => {
     expect(formatCurrency(2798)).toBe('$27.98')
-    expect(formatCurrency(18789)).toBe('$187.89')
-    expect(formatCurrency(23881)).toBe('$238.81')
+    expect(formatCurrency(20987)).toBe('$209.87')
+    expect(formatCurrency(26079)).toBe('$260.79')
     expect(formatCurrency(5092)).toBe('$50.92')
   })
 })

@@ -169,7 +169,7 @@ export function ReviewPanel() {
                 </span>
               )}
 
-              <div className="flex  items-end gap-2">
+              <div className="flex items-end gap-2">
                 {isEmpty ? null : (
                   <span
                     className="font-gilroy-medium text-lg font-normal tracking-[0.25%] text-text-secondary line-through"
@@ -188,7 +188,7 @@ export function ReviewPanel() {
             </div>
           </div>
 
-          {isEmpty ? null : (
+          {!isEmpty && pricingSummary.savingsCents > 0 ? (
             <p
               className="m-0 mt-4 text-center font-gilroy-semibold text-xs font-normal tracking-[-0.06px] text-selection"
               data-testid="review-savings"
@@ -197,7 +197,7 @@ export function ReviewPanel() {
               {formatCurrency(pricingSummary.savingsCents)} on your security
               bundle!
             </p>
-          )}
+          ) : null}
 
           <button
             type="button"
@@ -212,7 +212,7 @@ export function ReviewPanel() {
             <div className="mt-2 flex flex-col items-center gap-1">
               <button
                 type="button"
-                className=" cursor-pointer font-gilroy-regular-italic text-sm font-normal italic tracking-[-0.02px] text-text-secondary underline underline-offset-2 motion-safe:transition-[color,text-decoration-color] motion-safe:duration-200 motion-safe:ease-out hover:text-text-primary hover:decoration-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+                className="cursor-pointer font-gilroy-regular-italic text-sm font-normal italic tracking-[-0.02px] text-text-secondary underline underline-offset-2 motion-safe:transition-[color,text-decoration-color] motion-safe:duration-200 motion-safe:ease-out hover:text-text-primary hover:decoration-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
                 onClick={handleSaveForLater}
               >
                 Save my system for later

@@ -2,6 +2,7 @@ import { render } from '@testing-library/react'
 import { screen } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
+import { PRODUCT_ASSETS } from '@/assets/productAssets'
 import { PRODUCT_IDS } from '@/data/products'
 import type { Product } from '@/types'
 import { ProductCard } from './ProductCard'
@@ -13,21 +14,21 @@ const variantProduct: Product = {
   learnMoreUrl: 'https://www.wyze.com/products/wyze-cam-v4',
   category: 'cameras',
   stepId: 'cameras',
-  imageSrc: '/src/assets/products/wyze-cam-v4.png',
+  imageSrc: PRODUCT_ASSETS.wyzeCamV4White,
   discountBadge: 'Save 22%',
   defaultVariantId: 'white',
   variants: [
     {
       id: 'white',
       name: 'White',
-      imageSrc: '/src/assets/products/wyze-cam-v4-white.png',
+      imageSrc: PRODUCT_ASSETS.wyzeCamV4White,
       priceCents: 2798,
       compareAtPriceCents: 3598,
     },
     {
       id: 'black',
       name: 'Black',
-      imageSrc: '/src/assets/products/wyze-cam-v4-black.png',
+      imageSrc: PRODUCT_ASSETS.wyzeCamV4SwatchBlack,
       priceCents: 2798,
       compareAtPriceCents: 3598,
     },
@@ -40,7 +41,7 @@ const simpleProduct: Product = {
   description: 'Dual-camera doorbell with head-to-toe view.',
   category: 'cameras',
   stepId: 'cameras',
-  imageSrc: '/src/assets/products/wyze-duo-cam-doorbell.png',
+  imageSrc: PRODUCT_ASSETS.wyzeDuoCamDoorbell,
   priceCents: 8998,
   compareAtPriceCents: 9998,
 }
@@ -160,7 +161,7 @@ describe('ProductCard', () => {
       description: 'Unlimited camera licenses with smart detections.',
       category: 'plan',
       stepId: 'plan',
-      imageSrc: '/src/assets/products/cam-unlimited.svg',
+      imageSrc: PRODUCT_ASSETS.camUnlimited,
       priceCents: 999,
       maxQuantity: 1,
     }

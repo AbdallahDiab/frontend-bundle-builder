@@ -101,23 +101,14 @@ export function ProductCard({
             {product.description}
           </p>
           {product.learnMoreUrl && (
-            <span
-              role="button"
-              tabIndex={0}
-              className="mt-0.5 inline-block cursor-pointer font-gilroy-medium text-xs font-normal tracking-[0.6px] text-link underline decoration-solid underline-offset-2"
-              onClick={(event) => {
-                event.preventDefault()
-                event.stopPropagation()
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault()
-                  event.stopPropagation()
-                }
-              }}
+            <a
+              href={product.learnMoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-0.5 inline-block cursor-pointer font-gilroy-medium text-xs font-normal tracking-[0.6px] text-link underline decoration-solid underline-offset-2 motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out hover:text-wyze-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
             >
               Learn More
-            </span>
+            </a>
           )}
         </div>
 

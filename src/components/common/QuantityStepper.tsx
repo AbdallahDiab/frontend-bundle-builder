@@ -94,13 +94,15 @@ export function QuantityStepper({
   decrementDisabled = value <= 0,
   incrementDisabled = false,
   ariaLabel,
-  size: _size = 'md',
+  size = 'md',
   variant = 'card',
   className = '',
 }: QuantityStepperProps) {
+  const gapClass = size === 'sm' ? 'gap-2' : 'gap-2.5'
+
   return (
     <div
-      className={`inline-flex items-end gap-2.5 ${className}`.trim()}
+      className={`inline-flex items-end ${gapClass} ${className}`.trim()}
       role="group"
       aria-label={ariaLabel}
     >
@@ -118,11 +120,7 @@ export function QuantityStepper({
         />
       </button>
 
-      <span
-        className={QUANTITY_VALUE}
-        aria-live="polite"
-        aria-atomic="true"
-      >
+      <span className={QUANTITY_VALUE} aria-live="polite" aria-atomic="true">
         <VisuallyHidden>Quantity:</VisuallyHidden>
         {value}
       </span>

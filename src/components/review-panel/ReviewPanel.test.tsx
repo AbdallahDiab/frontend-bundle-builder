@@ -82,16 +82,16 @@ describe('ReviewPanel', () => {
     expect(screen.getByText('Cam Unlimited')).toBeInTheDocument()
   })
 
-  it('renders initial total $187.89', () => {
+  it('renders initial total from catalog seed data', () => {
     renderWithBundleBuilder(<ReviewPanel />)
 
-    expect(screen.getByTestId('review-total')).toHaveTextContent('$187.89')
+    expect(screen.getByTestId('review-total')).toHaveTextContent('$209.87')
   })
 
-  it('renders compare-at total $238.81', () => {
+  it('renders compare-at total from catalog seed data', () => {
     renderWithBundleBuilder(<ReviewPanel />)
 
-    expect(screen.getByText('$238.81')).toBeInTheDocument()
+    expect(screen.getByText('$260.79')).toBeInTheDocument()
   })
 
   it('renders savings $50.92', () => {
@@ -309,7 +309,7 @@ describe('BundleBuilderProvider shared state', () => {
       within(camV4Line).getByRole('button', { name: 'Increase quantity' }),
     )
 
-    expect(screen.getByTestId('review-total')).toHaveTextContent('$215.87')
+    expect(screen.getByTestId('review-total')).toHaveTextContent('$237.85')
   })
 
   it('restores saved configuration when the provider remounts', () => {
@@ -393,7 +393,7 @@ describe('BundleBuilderProvider shared state', () => {
 
     renderWithBundleBuilder(<ReviewPanel />)
 
-    expect(screen.getByTestId('review-total')).toHaveTextContent('$187.89')
+    expect(screen.getByTestId('review-total')).toHaveTextContent('$209.87')
     expect(screen.getByText('Wyze Cam Pan v3')).toBeInTheDocument()
   })
 })

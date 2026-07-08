@@ -24,8 +24,7 @@ export function ReviewLineItem({
   const useLargeImage =
     item.category === 'sensors' || item.category === 'accessories'
   const isPlanItem = item.category === 'plan'
-  const quantityLocked =
-    item.maxQuantity !== undefined && item.maxQuantity <= 1
+  const quantityLocked = item.maxQuantity !== undefined && item.maxQuantity <= 1
 
   return (
     <li
@@ -53,7 +52,7 @@ export function ReviewLineItem({
         />
       </div>
 
-      <p className="m-0 min-w-0 flex-1 font-gilroy-medium text-sm font-normal leading-snug tracking-[0.5%] text-text-primary line-clamp-2">
+      <p className="m-0 min-w-0 flex-1 break-words font-gilroy-medium text-sm font-normal leading-snug tracking-[0.5%] text-text-primary [overflow-wrap:anywhere]">
         {displayName}
       </p>
 

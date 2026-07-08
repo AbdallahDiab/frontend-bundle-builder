@@ -1,3 +1,4 @@
+import { PRODUCT_ASSETS } from '@/assets/productAssets'
 import type { Product, ProductId, ShippingSummaryRow } from '@/types'
 
 /** Canonical product ids used across catalog, state, and tests. */
@@ -12,9 +13,6 @@ export const PRODUCT_IDS = {
   WYZE_MICROSD_CARD_256GB: 'wyze-microsd-card-256gb',
   CAM_UNLIMITED: 'cam-unlimited',
 } as const satisfies Record<string, ProductId>
-
-const productImage = (slug: string) => `/src/assets/products/${slug}.png`
-const productSwatch = (slug: string) => `/src/assets/products/${slug}.svg`
 
 /** Shipping summary row — not a selectable catalog product. */
 export const BUNDLE_SHIPPING_SUMMARY: ShippingSummaryRow = {
@@ -33,15 +31,15 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-cam-v4',
     category: 'cameras',
     stepId: 'cameras',
-    imageSrc: productImage('wyze-cam-v4-white'),
+    imageSrc: PRODUCT_ASSETS.wyzeCamV4White,
     discountBadge: 'Save 22%',
     defaultVariantId: 'white',
     variants: [
       {
         id: 'white',
         name: 'White',
-        imageSrc: productImage('wyze-cam-v4-white'),
-        swatchSrc: productSwatch('wyze-cam-v4-swatch-white'),
+        imageSrc: PRODUCT_ASSETS.wyzeCamV4White,
+        swatchSrc: PRODUCT_ASSETS.wyzeCamV4SwatchWhite,
         priceCents: 2798,
         compareAtPriceCents: 3598,
         initialQuantity: 1,
@@ -49,16 +47,16 @@ export const PRODUCT_CATALOG: readonly Product[] = [
       {
         id: 'grey',
         name: 'Grey',
-        imageSrc: productSwatch('wyze-cam-v4-swatch-grey'),
-        swatchSrc: productSwatch('wyze-cam-v4-swatch-grey'),
+        imageSrc: PRODUCT_ASSETS.wyzeCamV4SwatchGrey,
+        swatchSrc: PRODUCT_ASSETS.wyzeCamV4SwatchGrey,
         priceCents: 2798,
         compareAtPriceCents: 3598,
       },
       {
         id: 'black',
         name: 'Black',
-        imageSrc: productSwatch('wyze-cam-v4-swatch-black'),
-        swatchSrc: productSwatch('wyze-cam-v4-swatch-black'),
+        imageSrc: PRODUCT_ASSETS.wyzeCamV4SwatchBlack,
+        swatchSrc: PRODUCT_ASSETS.wyzeCamV4SwatchBlack,
         priceCents: 2798,
         compareAtPriceCents: 3598,
       },
@@ -71,15 +69,15 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-cam-pan-v3',
     category: 'cameras',
     stepId: 'cameras',
-    imageSrc: productImage('wyze-cam-pan-v3-white'),
+    imageSrc: PRODUCT_ASSETS.wyzeCamPanV3White,
     discountBadge: 'Save 12%',
     defaultVariantId: 'white',
     variants: [
       {
         id: 'white',
         name: 'White',
-        imageSrc: productImage('wyze-cam-pan-v3-white'),
-        swatchSrc: productSwatch('wyze-cam-pan-v3-swatch-white'),
+        imageSrc: PRODUCT_ASSETS.wyzeCamPanV3White,
+        swatchSrc: PRODUCT_ASSETS.wyzeCamPanV3SwatchWhite,
         priceCents: 3498,
         compareAtPriceCents: 3998,
         initialQuantity: 2,
@@ -87,8 +85,8 @@ export const PRODUCT_CATALOG: readonly Product[] = [
       {
         id: 'black',
         name: 'Black',
-        imageSrc: productSwatch('wyze-cam-pan-v3-swatch-black'),
-        swatchSrc: productSwatch('wyze-cam-pan-v3-swatch-black'),
+        imageSrc: PRODUCT_ASSETS.wyzeCamPanV3SwatchBlack,
+        swatchSrc: PRODUCT_ASSETS.wyzeCamPanV3SwatchBlack,
         priceCents: 3498,
         compareAtPriceCents: 3998,
       },
@@ -102,23 +100,23 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-cam-floodlight-v2',
     category: 'cameras',
     stepId: 'cameras',
-    imageSrc: productSwatch('wyze-cam-floodlight-v2-swatch-white'),
+    imageSrc: PRODUCT_ASSETS.wyzeCamFloodlightV2SwatchWhite,
     discountBadge: 'Save 22%',
     defaultVariantId: 'white',
     variants: [
       {
         id: 'white',
         name: 'White',
-        imageSrc: productSwatch('wyze-cam-floodlight-v2-swatch-white'),
-        swatchSrc: productSwatch('wyze-cam-floodlight-v2-swatch-white'),
+        imageSrc: PRODUCT_ASSETS.wyzeCamFloodlightV2SwatchWhite,
+        swatchSrc: PRODUCT_ASSETS.wyzeCamFloodlightV2SwatchWhite,
         priceCents: 6998,
         compareAtPriceCents: 8998,
       },
       {
         id: 'black',
         name: 'Black',
-        imageSrc: productSwatch('wyze-cam-floodlight-v2-swatch-black'),
-        swatchSrc: productSwatch('wyze-cam-floodlight-v2-swatch-black'),
+        imageSrc: PRODUCT_ASSETS.wyzeCamFloodlightV2SwatchBlack,
+        swatchSrc: PRODUCT_ASSETS.wyzeCamFloodlightV2SwatchBlack,
         priceCents: 6998,
         compareAtPriceCents: 8998,
       },
@@ -131,7 +129,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-duo-cam-doorbell',
     category: 'cameras',
     stepId: 'cameras',
-    imageSrc: productImage('wyze-duo-cam-doorbell'),
+    imageSrc: PRODUCT_ASSETS.wyzeDuoCamDoorbell,
     priceCents: 6998,
   },
   {
@@ -142,21 +140,21 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-battery-cam-pro',
     category: 'cameras',
     stepId: 'cameras',
-    imageSrc: productImage('wyze-battery-cam-pro-white'),
+    imageSrc: PRODUCT_ASSETS.wyzeBatteryCamProWhite,
     defaultVariantId: 'white',
     variants: [
       {
         id: 'white',
         name: 'White',
-        imageSrc: productImage('wyze-battery-cam-pro-white'),
-        swatchSrc: productSwatch('wyze-battery-cam-pro-swatch-white'),
+        imageSrc: PRODUCT_ASSETS.wyzeBatteryCamProWhite,
+        swatchSrc: PRODUCT_ASSETS.wyzeBatteryCamProSwatchWhite,
         priceCents: 8998,
       },
       {
         id: 'black',
         name: 'Black',
-        imageSrc: productSwatch('wyze-battery-cam-pro-swatch-black'),
-        swatchSrc: productSwatch('wyze-battery-cam-pro-swatch-black'),
+        imageSrc: PRODUCT_ASSETS.wyzeBatteryCamProSwatchBlack,
+        swatchSrc: PRODUCT_ASSETS.wyzeBatteryCamProSwatchBlack,
         priceCents: 8998,
       },
     ],
@@ -170,7 +168,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/pages/service-plans',
     category: 'plan',
     stepId: 'plan',
-    imageSrc: productSwatch('cam-unlimited'),
+    imageSrc: PRODUCT_ASSETS.camUnlimited,
     priceCents: 999,
     compareAtPriceCents: 1299,
     priceSuffix: '/mo',
@@ -186,7 +184,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-sense-motion-sensor',
     category: 'sensors',
     stepId: 'sensors',
-    imageSrc: productSwatch('wyze-sense-motion-sensor'),
+    imageSrc: PRODUCT_ASSETS.wyzeSenseMotionSensor,
     priceCents: 2999,
     initialQuantity: 2,
   },
@@ -197,7 +195,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-hms-bundle',
     category: 'sensors',
     stepId: 'sensors',
-    imageSrc: productSwatch('wyze-sense-hub'),
+    imageSrc: PRODUCT_ASSETS.wyzeSenseHub,
     priceCents: 0,
     compareAtPriceCents: 2992,
     priceLabel: 'FREE',
@@ -215,7 +213,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     learnMoreUrl: 'https://www.wyze.com/products/wyze-microsd-card',
     category: 'accessories',
     stepId: 'accessories',
-    imageSrc: productSwatch('wyze-microsd-card-256gb'),
+    imageSrc: PRODUCT_ASSETS.wyzeMicrosdCard256gb,
     discountBadge: 'Save 37%',
     priceCents: 2098,
     initialQuantity: 2,
