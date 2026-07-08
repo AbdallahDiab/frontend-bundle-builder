@@ -8,6 +8,7 @@ type QuantityStepperProps = {
   onIncrement: () => void
   onDecrement: () => void
   decrementDisabled?: boolean
+  incrementDisabled?: boolean
   ariaLabel: string
   size?: QuantityStepperSize
   variant?: QuantityStepperVariant
@@ -35,7 +36,14 @@ function getMinusButtonClass(
   return 'bg-gray-200 hover:bg-gray-300/80'
 }
 
-function getPlusButtonClass(variant: QuantityStepperVariant): string {
+function getPlusButtonClass(
+  variant: QuantityStepperVariant,
+  incrementDisabled: boolean,
+): string {
+  if (incrementDisabled) {
+    return 'border border-gray-300 bg-surface hover:bg-surface'
+  }
+
   if (variant === 'review') {
     return 'bg-surface hover:bg-gray-200/50'
   }
@@ -84,6 +92,7 @@ export function QuantityStepper({
   onIncrement,
   onDecrement,
   decrementDisabled = value <= 0,
+  incrementDisabled = false,
   ariaLabel,
   size: _size = 'md',
   variant = 'card',
@@ -120,11 +129,16 @@ export function QuantityStepper({
 
       <button
         type="button"
-        className={`${stepperButtonBase} ${getPlusButtonClass(variant)}`}
+        className={`${stepperButtonBase} ${getPlusButtonClass(variant, incrementDisabled)}`}
         onClick={onIncrement}
+        disabled={incrementDisabled}
         aria-label="Increase quantity"
       >
-        <PlusIcon className="size-2.5 text-gray-obsidian" />
+        <PlusIcon
+          className={`size-2.5 ${
+            incrementDisabled ? 'text-gray-400' : 'text-gray-obsidian'
+          }`}
+        />
       </button>
     </div>
   )

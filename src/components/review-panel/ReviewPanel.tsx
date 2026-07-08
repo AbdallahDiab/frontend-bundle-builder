@@ -25,6 +25,9 @@ export function ReviewPanel() {
   const { showToast } = useToast()
   const [saveAcknowledged, setSaveAcknowledged] = useState(false)
   const isEmpty = selectedItems.length === 0
+  const visibleCategories = REVIEW_CATEGORY_ORDER.filter(
+    (category) => groupedSelectedItems[category].length > 0,
+  )
 
   const handleCheckout = () => {
     if (isEmpty) return
@@ -51,20 +54,20 @@ export function ReviewPanel() {
       className="w-full min-w-0 xl:w-[var(--layout-review-width)] lg:sticky lg:top-8 lg:max-h-[calc(100dvh-4rem)] lg:self-start lg:overflow-y-auto"
     >
       <div className="overflow-hidden rounded-card bg-review-panel shadow-panel">
-        <header className="border-b border-gray-300/70 px-4 py-4 sm:px-5 sm:py-5">
-          <p className="m-0 mb-1 text-[0.6875rem] font-medium tracking-[0.08em] text-gray-600 uppercase">
+        <header className="border-b border-gray-400 px-4 py-4 sm:px-5 sm:py-5 lg:px-[15px] lg:pt-[15px]">
+          <p className="m-0 mb-1 text-[0.6875rem] font-medium tracking-[0.08em] text-gray-600 uppercase sm:font-gilroy-medium sm:text-xs sm:font-normal sm:tracking-[1.6px]">
             Review
           </p>
-          <h2 className="m-0 text-xl font-bold text-text-primary sm:text-2xl">
+          <h2 className="m-0 text-xl font-bold text-text-primary sm:font-gilroy-semibold sm:text-[22px] sm:font-normal sm:tracking-[0.6px]">
             Your security system
           </h2>
-          <p className="mb-0 mt-2 text-sm leading-relaxed text-text-secondary">
+          <p className="mb-0 mt-2 text-sm leading-[130%] text-text-secondary sm:font-gilroy-medium sm:text-sm sm:font-normal sm:tracking-[0.6px]">
             Review your personalized protection system designed to keep what
             matters most safe.
           </p>
         </header>
 
-        <div className="px-4 py-3 sm:px-5 sm:py-4">
+        <div className="px-4 py-3 sm:px-5 sm:py-4 lg:px-[15px]">
           {isEmpty ? (
             <section
               aria-live="polite"
@@ -81,24 +84,25 @@ export function ReviewPanel() {
             </section>
           ) : (
             <>
-              {REVIEW_CATEGORY_ORDER.map((category) => {
+              {visibleCategories.map((category, index) => {
                 const items = groupedSelectedItems[category]
-                if (items.length === 0) return null
 
                 return (
                   <section
                     key={category}
                     aria-labelledby={`review-section-${category}`}
-                    className="border-b border-gray-300/70 pb-1 last:border-b-0"
+                    className={
+                      index > 0 ? 'mt-2.5 border-t border-gray-400' : undefined
+                    }
                   >
                     <h3
                       id={`review-section-${category}`}
-                      className="m-0 py-2.5 text-[0.6875rem] font-semibold tracking-[0.08em] text-gray-600 uppercase sm:py-3"
+                      className="m-0 py-2.5 text-[0.6875rem] font-semibold tracking-[0.08em] text-gray-600 uppercase sm:py-3 sm:font-gilroy-regular sm:text-xs sm:font-normal sm:tracking-[3%] sm:text-[#A8B2BD]"
                     >
                       {REVIEW_CATEGORY_LABELS[category]}
                     </h3>
 
-                    <ul className="m-0 list-none p-0">
+                    <ul className="m-0 flex list-none flex-col gap-2 p-0">
                       {items.map((item) => (
                         <ReviewLineItem
                           key={getLineItemKey(item.productId, item.variantId)}
@@ -118,7 +122,7 @@ export function ReviewPanel() {
 
               <section
                 aria-label="Shipping"
-                className="border-b border-gray-300/70 py-2.5 sm:py-3"
+                className={`py-2.5 sm:py-3 ${visibleCategories.length > 0 ? 'mt-2.5 border-t border-gray-400' : ''}`}
                 data-testid="review-shipping-row"
               >
                 <div className="flex items-center gap-2.5 sm:gap-3">
@@ -148,7 +152,7 @@ export function ReviewPanel() {
           )}
         </div>
 
-        <footer className="border-t border-gray-300/70 px-4 py-4 sm:px-5 sm:py-5">
+        <footer className="px-4 py-4 sm:px-5 sm:py-5 lg:px-[15px] lg:pb-[15px]">
           <div className="flex items-start justify-between gap-3">
             {isEmpty ? null : (
               <ProductImage
@@ -160,22 +164,22 @@ export function ReviewPanel() {
 
             <div className="flex min-w-0 flex-col items-end gap-2">
               {isEmpty ? null : (
-                <span className="inline-flex items-center rounded-full bg-wyze-purple px-2.5 py-0.5 text-[0.6875rem] font-semibold text-white sm:px-3 sm:py-1 sm:text-xs">
+                <span className="inline-flex items-center rounded-full bg-wyze-purple px-2.5 py-0.5 font-gilroy-medium text-xs font-normal tracking-[-5%] text-white [leading-trim:cap] [text-box-edge:cap_alphabetic] sm:px-3 sm:py-1">
                   as low as $19.19/mo
                 </span>
               )}
 
-              <div className="flex flex-col items-end gap-0.5">
+              <div className="flex  items-end gap-2">
                 {isEmpty ? null : (
                   <span
-                    className="text-sm text-text-secondary line-through"
+                    className="font-gilroy-medium text-lg font-normal tracking-[0.25%] text-text-secondary line-through"
                     data-testid="review-compare-total"
                   >
                     {formatCurrency(pricingSummary.compareAtTotalCents)}
                   </span>
                 )}
                 <span
-                  className="text-[1.75rem] font-bold leading-none text-wyze-purple sm:text-3xl"
+                  className="font-gilroy-bold text-2xl font-normal leading-none tracking-[-0.13%] text-wyze-purple"
                   data-testid="review-total"
                 >
                   {formatCurrency(pricingSummary.totalCents)}
@@ -186,7 +190,7 @@ export function ReviewPanel() {
 
           {isEmpty ? null : (
             <p
-              className="m-0 mt-4 text-center text-sm font-medium text-selection"
+              className="m-0 mt-4 text-center font-gilroy-semibold text-xs font-normal tracking-[-0.06px] text-selection"
               data-testid="review-savings"
             >
               Congrats! You&apos;re saving{' '}
@@ -197,7 +201,7 @@ export function ReviewPanel() {
 
           <button
             type="button"
-            className="mt-4 w-full min-h-11 rounded-control bg-wyze-purple px-6 py-3 text-base font-semibold text-white motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-200 motion-safe:ease-out hover:bg-wyze-purple/90 hover:shadow-panel motion-safe:active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple disabled:cursor-not-allowed disabled:bg-wyze-purple/50 disabled:text-white/75 disabled:hover:bg-wyze-purple/50 disabled:hover:shadow-none disabled:motion-safe:active:scale-100"
+            className="mt-4 w-full min-h-11 cursor-pointer rounded-control bg-wyze-purple px-6 py-3 font-tt-norms-pro text-[17px] font-bold tracking-normal text-white motion-safe:transition-[background-color,box-shadow,transform] motion-safe:duration-200 motion-safe:ease-out hover:bg-wyze-purple/90 hover:shadow-panel motion-safe:active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple disabled:cursor-not-allowed disabled:bg-wyze-purple/50 disabled:text-white/75 disabled:hover:bg-wyze-purple/50 disabled:hover:shadow-none disabled:motion-safe:active:scale-100"
             onClick={handleCheckout}
             disabled={isEmpty}
           >
@@ -205,10 +209,10 @@ export function ReviewPanel() {
           </button>
 
           {isEmpty ? null : (
-            <div className="mt-3 flex flex-col items-center gap-1">
+            <div className="mt-2 flex flex-col items-center gap-1">
               <button
                 type="button"
-                className="min-h-11 cursor-pointer text-sm text-text-secondary underline underline-offset-2 motion-safe:transition-[color,text-decoration-color] motion-safe:duration-200 motion-safe:ease-out hover:text-text-primary hover:decoration-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
+                className=" cursor-pointer font-gilroy-regular-italic text-sm font-normal italic tracking-[-0.02px] text-text-secondary underline underline-offset-2 motion-safe:transition-[color,text-decoration-color] motion-safe:duration-200 motion-safe:ease-out hover:text-text-primary hover:decoration-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wyze-purple"
                 onClick={handleSaveForLater}
               >
                 Save my system for later

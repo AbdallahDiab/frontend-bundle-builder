@@ -30,8 +30,19 @@ export function getProductQuantity(
   return configuration.quantities.products[productId] ?? 0
 }
 
-function clampQuantity(quantity: number): number {
-  return Math.max(0, quantity)
+function clampQuantity(quantity: number, maxQuantity?: number): number {
+  const floored = Math.max(0, quantity)
+  if (maxQuantity === undefined) return floored
+  return Math.min(floored, maxQuantity)
+}
+
+function nextIncrementedQuantity(
+  current: number,
+  maxQuantity?: number,
+): number | null {
+  const next = current + 1
+  if (maxQuantity !== undefined && next > maxQuantity) return null
+  return next
 }
 
 export function incrementItemQuantity(
@@ -47,6 +58,8 @@ export function incrementItemQuantity(
     if (!variantId) return configuration
 
     const current = getVariantQuantity(configuration, productId, variantId)
+    const next = nextIncrementedQuantity(current, product.maxQuantity)
+    if (next === null) return configuration
 
     return {
       ...configuration,
@@ -56,7 +69,7 @@ export function incrementItemQuantity(
           ...configuration.quantities.variants,
           [productId]: {
             ...configuration.quantities.variants[productId],
-            [variantId]: current + 1,
+            [variantId]: next,
           },
         },
       },
@@ -64,6 +77,8 @@ export function incrementItemQuantity(
   }
 
   const current = getProductQuantity(configuration, productId)
+  const next = nextIncrementedQuantity(current, product.maxQuantity)
+  if (next === null) return configuration
 
   return {
     ...configuration,
@@ -71,7 +86,7 @@ export function incrementItemQuantity(
       ...configuration.quantities,
       products: {
         ...configuration.quantities.products,
-        [productId]: current + 1,
+        [productId]: next,
       },
     },
   }
@@ -89,6 +104,8 @@ export function incrementVariantQuantity(
   }
 
   const current = getVariantQuantity(configuration, productId, variantId)
+  const next = nextIncrementedQuantity(current, product.maxQuantity)
+  if (next === null) return configuration
 
   return {
     ...configuration,
@@ -98,7 +115,7 @@ export function incrementVariantQuantity(
         ...configuration.quantities.variants,
         [productId]: {
           ...configuration.quantities.variants[productId],
-          [variantId]: current + 1,
+          [variantId]: next,
         },
       },
     },

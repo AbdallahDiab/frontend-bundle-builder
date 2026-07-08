@@ -42,7 +42,7 @@ describe('AccordionBuilder', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders selected counts from seeded bundle state', () => {
+  it('shows selected count only on the open accordion step', () => {
     renderWithBundleBuilder(<AccordionBuilder />)
 
     const camerasHeader = screen.getByRole('button', {
@@ -57,11 +57,13 @@ describe('AccordionBuilder', () => {
     })
 
     expect(within(camerasHeader).getByText('2 selected')).toBeInTheDocument()
-    expect(within(planHeader).getByText('1 selected')).toBeInTheDocument()
-    expect(within(sensorsHeader).getByText('2 selected')).toBeInTheDocument()
+    expect(within(planHeader).queryByText('1 selected')).not.toBeInTheDocument()
     expect(
-      within(accessoriesHeader).getByText('1 selected'),
-    ).toBeInTheDocument()
+      within(sensorsHeader).queryByText('2 selected'),
+    ).not.toBeInTheDocument()
+    expect(
+      within(accessoriesHeader).queryByText('1 selected'),
+    ).not.toBeInTheDocument()
   })
 
   it('closes step 1 when its open header is clicked', async () => {
@@ -72,6 +74,7 @@ describe('AccordionBuilder', () => {
       name: STEP_HEADERS.cameras,
     })
     expect(camerasHeader).toHaveAttribute('aria-expanded', 'true')
+    expect(within(camerasHeader).getByText('2 selected')).toBeInTheDocument()
 
     await user.click(camerasHeader)
 
@@ -79,7 +82,9 @@ describe('AccordionBuilder', () => {
     expect(
       screen.queryByRole('region', { name: STEP_HEADERS.cameras }),
     ).not.toBeInTheDocument()
-    expect(within(camerasHeader).getByText('2 selected')).toBeInTheDocument()
+    expect(
+      within(camerasHeader).queryByText('2 selected'),
+    ).not.toBeInTheDocument()
   })
 
   it('reopens step 1 when its collapsed header is clicked', async () => {

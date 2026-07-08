@@ -36,11 +36,20 @@
 
   /* Typography */
   --font-sans: 'Gilroy', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-gilroy-regular:
+    'Gilroy-Regular', 'Gilroy', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-gilroy-regular-italic:
+    'Gilroy-RegularItalic', 'Gilroy', system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
   --font-gilroy-medium:
     'Gilroy-Medium', 'Gilroy', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-gilroy-semibold:
     'Gilroy-SemiBold', 'Gilroy', system-ui, -apple-system, 'Segoe UI',
     sans-serif;
+  --font-gilroy-bold:
+    'Gilroy-Bold', 'Gilroy', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-tt-norms-pro:
+    'TT Norms Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --text-step-label-open: 12px;
   --text-step-label-closed: 10px;
   --text-accordion-step-title: 22px;

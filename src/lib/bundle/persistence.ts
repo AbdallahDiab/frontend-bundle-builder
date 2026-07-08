@@ -75,7 +75,10 @@ function sanitizeProductQuantities(raw: unknown): ProductQuantityMap {
     if (!product || productHasVariants(product)) continue
     if (!isValidQuantity(quantity)) continue
 
-    sanitized[productId] = quantity
+    sanitized[productId] =
+      product.maxQuantity !== undefined
+        ? Math.min(quantity, product.maxQuantity)
+        : quantity
   }
 
   return sanitized
@@ -102,7 +105,10 @@ function sanitizeVariantQuantities(raw: unknown): VariantQuantityMap {
       if (!knownVariantIds.has(variantId)) continue
       if (!isValidQuantity(quantity)) continue
 
-      variantQuantities[variantId] = quantity
+      variantQuantities[variantId] =
+        product.maxQuantity !== undefined
+          ? Math.min(quantity, product.maxQuantity)
+          : quantity
     }
 
     if (Object.keys(variantQuantities).length > 0) {

@@ -35,6 +35,10 @@ export function ProductCard({
   const hasVariants = productHasVariants(product)
   const selected = isProductCardSelected(quantity)
   const pricing = getProductDisplayPricing(product, activeVariantId)
+  const useLargeImage =
+    product.category === 'sensors' ||
+    product.category === 'accessories' ||
+    product.category === 'plan'
 
   return (
     <article
@@ -68,8 +72,12 @@ export function ProductCard({
           alt={product.name}
           className={
             compact
-              ? 'h-20 w-full max-w-[5.5rem] object-contain sm:h-[4.75rem] sm:max-w-[5rem]'
-              : 'max-h-28 w-full max-w-[9.5rem] object-contain sm:max-h-32'
+              ? useLargeImage
+                ? 'h-24 w-full max-w-[6.5rem] object-contain sm:h-[5.5rem] sm:max-w-[6rem]'
+                : 'h-20 w-full max-w-[5.5rem] object-contain sm:h-[4.75rem] sm:max-w-[5rem]'
+              : useLargeImage
+                ? 'max-h-36 w-full max-w-[11rem] object-contain sm:max-h-40'
+                : 'max-h-28 w-full max-w-[9.5rem] object-contain sm:max-h-32'
           }
         />
       </div>
@@ -89,9 +97,7 @@ export function ProductCard({
           >
             {product.name}
           </h3>
-          <p
-            className="mt-0.5 line-clamp-2 font-gilroy-medium text-xs font-normal leading-snug tracking-[0.6px] text-gray-600"
-          >
+          <p className="mt-0.5 line-clamp-2 font-gilroy-medium text-xs font-normal leading-snug tracking-[0.6px] text-gray-600">
             {product.description}
           </p>
           {product.learnMoreUrl && (
@@ -131,6 +137,10 @@ export function ProductCard({
             onIncrement={onIncrement}
             onDecrement={onDecrement}
             decrementDisabled={quantity <= 0}
+            incrementDisabled={
+              product.maxQuantity !== undefined &&
+              quantity >= product.maxQuantity
+            }
             ariaLabel={`${product.name} quantity`}
             size={compact ? 'sm' : 'md'}
           />

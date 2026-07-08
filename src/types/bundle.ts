@@ -62,6 +62,8 @@ export type Product = {
   defaultVariantId?: VariantId
   /** Seeded quantity for products without variants. */
   initialQuantity?: number
+  /** Caps how many units can be selected (e.g. Cam Unlimited = 1). */
+  maxQuantity?: number
   /** Marks required items such as the Wyze Sense Hub. */
   isRequired?: boolean
   requiredLabel?: string
@@ -108,6 +110,7 @@ export type SelectedItem = {
   compareAtLineTotalCents?: number
   category: ProductCategory
   imageSrc: string
+  maxQuantity?: number
   isRequired?: boolean
   requiredLabel?: string
   priceLabel?: string

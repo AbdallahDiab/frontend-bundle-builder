@@ -55,6 +55,7 @@ function buildSelectedItemLine(
     compareAtLineTotalCents,
     category: product.category,
     imageSrc: variant?.imageSrc ?? product.imageSrc,
+    maxQuantity: product.maxQuantity,
     isRequired: product.isRequired,
     requiredLabel: product.requiredLabel,
     priceLabel: product.priceLabel,

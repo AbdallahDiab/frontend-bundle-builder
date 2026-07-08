@@ -152,4 +152,31 @@ describe('ProductCard', () => {
       'true',
     )
   })
+
+  it('disables increment when quantity reaches maxQuantity', () => {
+    const planProduct: Product = {
+      id: PRODUCT_IDS.CAM_UNLIMITED,
+      name: 'Cam Unlimited',
+      description: 'Unlimited camera licenses with smart detections.',
+      category: 'plan',
+      stepId: 'plan',
+      imageSrc: '/src/assets/products/cam-unlimited.svg',
+      priceCents: 999,
+      maxQuantity: 1,
+    }
+
+    render(
+      <ProductCard
+        product={planProduct}
+        quantity={1}
+        onVariantChange={vi.fn()}
+        onIncrement={vi.fn()}
+        onDecrement={vi.fn()}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', { name: 'Increase quantity' }),
+    ).toBeDisabled()
+  })
 })

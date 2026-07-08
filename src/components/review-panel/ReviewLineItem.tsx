@@ -21,35 +21,57 @@ export function ReviewLineItem({
   onDecrement,
 }: ReviewLineItemProps) {
   const displayName = item.productName
+  const useLargeImage =
+    item.category === 'sensors' || item.category === 'accessories'
+  const isPlanItem = item.category === 'plan'
+  const quantityLocked =
+    item.maxQuantity !== undefined && item.maxQuantity <= 1
 
   return (
     <li
-      className="-mx-1 flex items-center gap-2 rounded-control border-b border-gray-300/70 px-1 py-2.5 motion-safe:transition-colors motion-safe:duration-150 motion-safe:ease-out last:border-b-0 hover:bg-gray-200/30 sm:gap-3 sm:py-3"
+      className="-mx-1 flex items-center gap-2 rounded-control px-1 motion-safe:transition-colors motion-safe:duration-150 motion-safe:ease-out hover:bg-gray-200/30 sm:gap-3"
       data-testid={`review-line-${getLineItemKey(item)}`}
     >
-      <div className="flex size-11 shrink-0 items-center justify-center rounded-control bg-surface p-1 sm:size-12">
+      <div
+        className={`flex shrink-0 items-center justify-center rounded-control ${
+          isPlanItem
+            ? 'size-11 sm:size-12'
+            : 'size-11 bg-surface p-1 sm:size-12'
+        }`}
+      >
         <ProductImage
           src={item.imageSrc}
           alt=""
           aria-hidden="true"
-          className="size-9 object-contain sm:size-10"
+          className={
+            isPlanItem
+              ? 'h-[23px] w-5 object-contain'
+              : useLargeImage
+                ? 'size-10 object-contain sm:size-11'
+                : 'size-9 object-contain sm:size-10'
+          }
         />
       </div>
 
-      <p className="m-0 min-w-0 flex-1 text-sm font-medium leading-snug text-text-primary line-clamp-2">
+      <p className="m-0 min-w-0 flex-1 font-gilroy-medium text-sm font-normal leading-snug tracking-[0.5%] text-text-primary line-clamp-2">
         {displayName}
       </p>
 
-      <QuantityStepper
-        value={item.quantity}
-        onIncrement={onIncrement}
-        onDecrement={onDecrement}
-        decrementDisabled={item.quantity <= 0}
-        ariaLabel={`${item.productName} quantity`}
-        size="sm"
-        variant="review"
-        className="shrink-0"
-      />
+      {quantityLocked ? null : (
+        <QuantityStepper
+          value={item.quantity}
+          onIncrement={onIncrement}
+          onDecrement={onDecrement}
+          decrementDisabled={item.quantity <= 0}
+          incrementDisabled={
+            item.maxQuantity !== undefined && item.quantity >= item.maxQuantity
+          }
+          ariaLabel={`${item.productName} quantity`}
+          size="sm"
+          variant="review"
+          className="shrink-0"
+        />
+      )}
 
       <PriceDisplay
         variant="review"

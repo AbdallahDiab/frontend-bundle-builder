@@ -24,14 +24,29 @@ async function removeAllSelectedItems(
 ) {
   while (true) {
     const lineItems = screen.queryAllByTestId(/review-line-/)
-    const firstLineItem = lineItems.at(0)
-    if (!firstLineItem) break
+    const adjustableLine = lineItems.find((line) =>
+      within(line).queryByRole('button', { name: 'Decrease quantity' }),
+    )
+    if (!adjustableLine) break
+
     await user.click(
-      within(firstLineItem).getByRole('button', {
+      within(adjustableLine).getByRole('button', {
         name: 'Decrease quantity',
       }),
     )
   }
+
+  // Cam Unlimited has no review quantity controls — clear it from the plan card.
+  if (!screen.queryByTestId('review-line-cam-unlimited-base')) return
+
+  await user.click(
+    screen.getByRole('button', { name: 'Choose your plan, 1 selected' }),
+  )
+
+  const planCard = screen.getByLabelText('Cam Unlimited')
+  await user.click(
+    within(planCard).getByRole('button', { name: 'Decrease quantity' }),
+  )
 }
 
 describe('ReviewPanel', () => {
@@ -119,6 +134,18 @@ describe('ReviewPanel', () => {
     const planLine = screen.getByTestId('review-line-cam-unlimited-base')
     expect(within(planLine).getByText('$9.99/mo')).toBeInTheDocument()
     expect(within(planLine).getByText('$12.99/mo')).toBeInTheDocument()
+  })
+
+  it('hides quantity controls for Cam Unlimited in the review panel', () => {
+    renderWithBundleBuilder(<ReviewPanel />)
+
+    const planLine = screen.getByTestId('review-line-cam-unlimited-base')
+    expect(
+      within(planLine).queryByRole('button', { name: 'Increase quantity' }),
+    ).not.toBeInTheDocument()
+    expect(
+      within(planLine).queryByRole('button', { name: 'Decrease quantity' }),
+    ).not.toBeInTheDocument()
   })
 
   it('shows checkout feedback message', async () => {

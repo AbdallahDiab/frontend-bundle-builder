@@ -202,7 +202,7 @@ function AccordionStepPanel({
               </span>
 
               <span className="flex shrink-0 items-center gap-2.5">
-                {selectedCount > 0 && (
+                {isOpen && selectedCount > 0 && (
                   <span className={STEP_SELECTED_COUNT}>
                     {selectedCount} selected
                   </span>

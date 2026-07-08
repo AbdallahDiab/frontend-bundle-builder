@@ -81,6 +81,19 @@ describe('variant quantity behavior', () => {
     expect(getProductQuantity(configuration, PRODUCT_IDS.WYZE_CAM_V4)).toBe(3)
   })
 
+  it('does not increase Cam Unlimited beyond maxQuantity of 1', () => {
+    let configuration = getInitialBundleConfiguration()
+
+    expect(getProductQuantity(configuration, PRODUCT_IDS.CAM_UNLIMITED)).toBe(1)
+
+    configuration = incrementItemQuantity(
+      configuration,
+      PRODUCT_IDS.CAM_UNLIMITED,
+    )
+
+    expect(getProductQuantity(configuration, PRODUCT_IDS.CAM_UNLIMITED)).toBe(1)
+  })
+
   it('does not reset other variant quantities when switching active variant', () => {
     let configuration = getInitialBundleConfiguration()
 
